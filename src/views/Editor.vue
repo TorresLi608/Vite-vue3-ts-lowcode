@@ -2,22 +2,30 @@
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/types'
+import { TextComponentProps } from '@/defaultProps'
 import { defaultTextTemplates } from '@/defaultTemplates'
+import ComponentList from '@/components/LeftTemplateList.vue'
+import demo from '@/components/demo.vue'
 const store = useStore<GlobalDataProps>();
 const components = computed(()=>{
   return store.state.editor.components
 })
+
+const defaultList = ref(defaultTextTemplates);
+
+const onItemClick = (item:Partial<TextComponentProps>)=>{
+  store.commit('addComponent',item)
+}
+
 </script>
 
 <script lang="ts">
 // 如果使用setUp糖语法 必须要手动注册一次组件 compontent 才会生效
 // vscode 插件 使用Volar 更好的支持糖语法+ts 否则引入糖语法的组件会报错
 import LText from '@/components/LText.vue'
-import ComponentList from '@/components/componentList.vue'
 export default {
   components: {
     LText,
-    ComponentList
   }
 }
 </script>
@@ -27,7 +35,7 @@ export default {
   <a-layout>
     <a-layout-sider width="300" style="background: #fff">
       <div class="sidebar-container">
-        <component-list :list="defaultTextTemplates" />
+        <ComponentList :list="defaultList" @onItemClick="onItemClick" />
       </div>
     </a-layout-sider>
     <a-layout style="padding: 0 24px 24px">

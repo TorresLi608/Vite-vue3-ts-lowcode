@@ -1,4 +1,5 @@
 import { mapValues, without } from 'lodash-es'
+// without 过滤数组获取需要的值
 export interface CommonComponentProps {
   // actions
   actionType: string;
