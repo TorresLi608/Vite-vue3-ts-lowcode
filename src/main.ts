@@ -5,6 +5,8 @@ import router from '@/router/index'
 import store from '@/store/index'
 import 'ant-design-vue/dist/antd.css';
 
+console.log(import.meta.env,'meta')
+
 const app = createApp(App);
 app.use(Antd).use(router).use(store)
 app.mount('#app')

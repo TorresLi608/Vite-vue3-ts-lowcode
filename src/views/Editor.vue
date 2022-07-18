@@ -1,21 +1,31 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
-import { GlobalDataProps } from '@/types'
+import { GlobalDataProps,ComponentData } from '@/types'
 import { TextComponentProps } from '@/defaultProps'
 import { defaultTextTemplates } from '@/defaultTemplates'
 import ComponentList from '@/components/LeftTemplateList.vue'
-import demo from '@/components/demo.vue'
+import EditWrapper from '@/components/EditWrapper.vue'
+
 const store = useStore<GlobalDataProps>();
 const components = computed(()=>{
   return store.state.editor.components
 })
+const currentElement = computed<ComponentData|null>(()=>{
+  return store.getters.getCurrentElement
+})
+
 
 const defaultList = ref(defaultTextTemplates);
 
 const onItemClick = (item:Partial<TextComponentProps>)=>{
   store.commit('addComponent',item)
 }
+
+const setActive = (id:string)=>{
+  store.commit('setActive',id)
+}
+
 
 </script>
 
@@ -42,12 +52,15 @@ export default {
       <a-layout-content class="preview-container">
         <p>画布区域</p>
         <div class="preview-list" id="canvas-area">
-         <component v-for="component in components" :key="component.id" :is="component.name"  v-bind="component.props"/>
+          <EditWrapper v-for="component in components" :key="component.id" :id="component.id" :active="currentElement?.id === component.id" @setActive="setActive">
+             <component :is="component.name"  v-bind="component.props"/>
+          </EditWrapper>
+        
         </div>
       </a-layout-content>
     </a-layout>
     <a-layout-sider width="300" style="background: #fff" class="settings-panel">
-      组件属性
+      {{currentElement}}
     </a-layout-sider>  
   </a-layout>
 </div>
