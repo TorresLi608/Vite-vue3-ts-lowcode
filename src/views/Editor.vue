@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref,getCurrentInstance } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps,ComponentData } from '@/types'
 import { TextComponentProps } from '@/defaultProps'
 import { defaultTextTemplates } from '@/defaultTemplates'
 import ComponentList from '@/components/LeftTemplateList.vue'
 import EditWrapper from '@/components/EditWrapper.vue'
+import PropsTable from '@/components/PropsTable.vue'
 
 const store = useStore<GlobalDataProps>();
 const components = computed(()=>{
@@ -55,12 +56,11 @@ export default {
           <EditWrapper v-for="component in components" :key="component.id" :id="component.id" :active="currentElement?.id === component.id" @setActive="setActive">
              <component :is="component.name"  v-bind="component.props"/>
           </EditWrapper>
-        
         </div>
       </a-layout-content>
     </a-layout>
     <a-layout-sider width="300" style="background: #fff" class="settings-panel">
-      {{currentElement}}
+    <PropsTable v-if="currentElement?.props" :props="currentElement?.props" />
     </a-layout-sider>  
   </a-layout>
 </div>

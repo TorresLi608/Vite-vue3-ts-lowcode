@@ -6,9 +6,9 @@ import { v4 as uuidv4 } from 'uuid'
 
 
 const components:ComponentData[] = [
-  {id:uuidv4(),name:"l-text",props:{text:"hello1",fontSize:'20px',actionType:'url',url:''}},
-  {id:uuidv4(),name:"l-text",props:{text:"hello2",fontSize:'15px'}},
-  {id:uuidv4(),name:"l-text",props:{text:"hello3",fontSize:'10px'}},
+  {id:uuidv4(),name:"l-text",props:{text:"hello1",fontSize:'20',actionType:'url',url:'',lineHeight:1,color:"red"}},
+  {id:uuidv4(),name:"l-text",props:{text:"hello2",fontSize:'15'}},
+  {id:uuidv4(),name:"l-text",props:{text:"hello3",fontSize:'10'}},
 ]
 
 
