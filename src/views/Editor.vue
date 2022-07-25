@@ -27,6 +27,10 @@ const setActive = (id:string)=>{
   store.commit('setActive',id)
 }
 
+const handleChange = (e:any)=>{
+  store.commit('updateComponent',e)
+}
+
 
 </script>
 
@@ -60,7 +64,7 @@ export default {
       </a-layout-content>
     </a-layout>
     <a-layout-sider width="300" style="background: #fff" class="settings-panel">
-    <PropsTable v-if="currentElement?.props" :props="currentElement?.props" />
+    <PropsTable v-if="currentElement?.props" :props="currentElement?.props" @change="handleChange" />
     </a-layout-sider>  
   </a-layout>
 </div>
