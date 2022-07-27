@@ -31,6 +31,7 @@ import { defineComponent, PropType, computed, VNode } from 'vue'
 import { TextComponentProps } from '@/defaultProps'
 import { mapPropsToForms } from '@/propsMap'
 import RenderVnodes from '@/components/RenderVnodes'
+import ColorPicker from '@/components/ColorPicker.vue'
 
 interface FormProps {
   component: string
@@ -46,7 +47,8 @@ interface FormProps {
 export default defineComponent({
   name: 'PropsTable',
   components:{
-    RenderVnodes
+    RenderVnodes,
+    ColorPicker
   },
   props: {
     props: {
@@ -76,12 +78,12 @@ export default defineComponent({
             const {
               valueProp = 'value',
               eventName = 'change',
-              intialTransform,
+              initalTransform,
               afterTransform,
             } = item
             const newItem: FormProps = {
               ...item,
-              value: intialTransform ? intialTransform(value) : value,
+              value: initalTransform ? initalTransform(value) : value,
               valueProp,
               eventName,
               events: {
