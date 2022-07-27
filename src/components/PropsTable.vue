@@ -28,8 +28,8 @@
 <script lang="ts">
 import { reduce } from 'lodash'
 import { defineComponent, PropType, computed, VNode } from 'vue'
-import { TextComponentProps } from '@/defaultProps'
-import { mapPropsToForms } from '@/propsMap'
+import { TextComponentProps } from '@/uitils/defaultProps'
+import { mapPropsToForms } from '@/uitils/propsMap'
 import RenderVnodes from '@/components/RenderVnodes'
 import ColorPicker from '@/components/ColorPicker.vue'
 

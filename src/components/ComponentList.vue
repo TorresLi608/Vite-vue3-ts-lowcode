@@ -15,10 +15,10 @@
 import { v4 as uuidv4 } from 'uuid'
 import { defineComponent,PropType } from 'vue'
 import { message } from 'ant-design-vue'
-import { TextComponentProps,imageDefaultProps } from '@/defaultProps'
+import { TextComponentProps,imageDefaultProps } from '@/uitils/defaultProps'
 import { ComponentData } from '@/types'
-import { UploadResp } from '@/extraType'
-import { getImageDimensions } from '@/helper'
+import { UploadResp } from '@/types/extraType'
+import { getImageDimensions } from '@/uitils/helper'
 import LText from '@/components/LText.vue'
 import StyledUploader from '@/components/StyledUploader.vue'
 export default defineComponent({

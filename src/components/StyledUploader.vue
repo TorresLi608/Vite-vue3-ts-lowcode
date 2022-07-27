@@ -31,7 +31,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { FileImageOutlined, LoadingOutlined } from '@ant-design/icons-vue'
-import { commonUploadCheck } from '../helper'
+import { commonUploadCheck } from '@/uitils/helper'
 import Uploader from './Uploader.vue'
 export default defineComponent({
   props: {
