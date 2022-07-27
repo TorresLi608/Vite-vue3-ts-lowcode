@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref,getCurrentInstance } from 'vue'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps,ComponentData } from '@/types'
 import { TextComponentProps } from '@/defaultProps'
@@ -17,9 +17,9 @@ const currentElement = computed<ComponentData|null>(()=>{
 })
 
 
-const defaultList = ref(defaultTextTemplates);
+const defaultList = ref<any[]>(defaultTextTemplates);
 
-const onItemClick = (item:Partial<TextComponentProps>)=>{
+const onItemClick = (item:ComponentData)=>{
   store.commit('addComponent',item)
 }
 
@@ -38,9 +38,11 @@ const handleChange = (e:any)=>{
 // 如果使用setUp糖语法 必须要手动注册一次组件 compontent 才会生效
 // vscode 插件 使用Volar 更好的支持糖语法+ts 否则引入糖语法的组件会报错
 import LText from '@/components/LText.vue'
+import LImage from '@/components/LImage.vue'
 export default {
   components: {
     LText,
+    LImage
   }
 }
 </script>

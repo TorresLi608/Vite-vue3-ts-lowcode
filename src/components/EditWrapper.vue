@@ -33,7 +33,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .edit-wrapper {
   padding: 0px;
   cursor: pointer;
