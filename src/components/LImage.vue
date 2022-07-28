@@ -9,7 +9,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import useComponentCommon from '@/hooks/useComponentCommon'
-import { transformToComponentProps, imageDefaultProps, imageStylePropsNames } from '@/defaultProps'
+import { transformToComponentProps, imageDefaultProps, imageStylePropsNames } from '@/uitils/defaultProps'
 const defaultProps = transformToComponentProps(imageDefaultProps)
 
 // array that contains style props

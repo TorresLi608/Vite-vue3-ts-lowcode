@@ -2,11 +2,11 @@
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps,ComponentData } from '@/types'
-import { TextComponentProps } from '@/defaultProps'
-import { defaultTextTemplates } from '@/defaultTemplates'
+import { defaultTextTemplates } from '@/uitils/defaultTemplates'
 import ComponentList from '@/components/ComponentList.vue'
 import EditWrapper from '@/components/EditWrapper.vue'
 import PropsTable from '@/components/PropsTable.vue'
+
 
 const store = useStore<GlobalDataProps>();
 const components = computed(()=>{

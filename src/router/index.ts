@@ -28,11 +28,6 @@ const routes = [
     name: 'editor',
     component: () => import('@/views/Editor.vue'),
   },
-  {
-    path: '/template/:id',
-    name: 'template',
-    component: () => import('@/views/TemplateDetail.vue'),
-  },
 ]
 
 const router = createRouter({

@@ -1,7 +1,5 @@
 import { Module } from 'vuex'
-import { message } from 'ant-design-vue'
 import {ComponentData,EditorProps,GlobalDataProps } from '@/types'
-import { TextComponentProps } from '@/uitils/defaultProps'
 import { v4 as uuidv4 } from 'uuid'
 
 

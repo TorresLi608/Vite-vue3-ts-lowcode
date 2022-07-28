@@ -14,7 +14,7 @@
               <template v-slot:description>
                 <div class="description-detail">
                   <span>作者：{{item.author}}</span>
-                  <span class="user-number">{{item.number}}</span>
+                  <span class="user-number">{{item.numberCount}}</span>
                 </div>
               </template>
             </a-card-meta>
