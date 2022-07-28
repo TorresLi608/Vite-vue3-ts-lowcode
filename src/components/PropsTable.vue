@@ -24,6 +24,7 @@
       </div>
     </div>
   </div>
+  {{finalProps}}
 </template>
 <script lang="ts">
 import { reduce } from 'lodash'
@@ -119,7 +120,7 @@ export default defineComponent({
 }
 
 .label {
-  width: 28%;
+  width: 18%;
 }
 
 .prop-component {

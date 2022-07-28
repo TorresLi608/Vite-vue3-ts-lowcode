@@ -4,6 +4,7 @@ import App from "./App.vue";
 import router from '@/router/index'
 import store from '@/store/index'
 import 'ant-design-vue/dist/antd.css';
+import 'cropperjs/dist/cropper.css'
 
 console.log(import.meta.env,'meta')
 

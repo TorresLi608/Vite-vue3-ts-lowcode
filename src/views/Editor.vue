@@ -6,13 +6,15 @@ import { defaultTextTemplates } from '@/uitils/defaultTemplates'
 import ComponentList from '@/components/ComponentList.vue'
 import EditWrapper from '@/components/EditWrapper.vue'
 import PropsTable from '@/components/PropsTable.vue'
+import LayerList from '@/components/LayerList.vue'
 
+const activeKey = ref('1')
 const store = useStore<GlobalDataProps>()
 const components = computed(() => {
   return store.state.editor.components
 })
 const currentElement = computed<ComponentData | null>(() => {
-  return store.getters.getCurrentElement
+  return store.getters.getCurrentElement || components.value[0]
 })
 
 const defaultList = ref<any[]>(defaultTextTemplates)
@@ -60,7 +62,7 @@ export default {
               :key="component.id"
               :id="component.id"
               :active="currentElement?.id === component.id"
-              @setActive="setActive"
+              @setActive="setActive(component.id)"
             >
               <component :is="component.name" v-bind="component.props" />
             </EditWrapper>
@@ -72,11 +74,18 @@ export default {
         style="background: #fff"
         class="settings-panel"
       >
-        <PropsTable
-          v-if="currentElement?.props"
-          :props="currentElement?.props"
-          @change="handleChange"
-        />
+        <a-tabs v-model:activeKey="activeKey" centered>
+          <a-tab-pane key="1" tab="属性设置">
+            <PropsTable
+              v-if="currentElement?.props"
+              :props="currentElement?.props"
+              @change="handleChange"
+          /></a-tab-pane>
+          <a-tab-pane key="2" tab="图层设置" force-render>
+            <LayerList v-if="currentElement"  :list="components" :selectedId="currentElement ? currentElement.id : ''" />
+          </a-tab-pane>
+          <a-tab-pane key="3" tab="页面设置">页面设置</a-tab-pane>
+        </a-tabs>
       </a-layout-sider>
     </a-layout>
   </div>
