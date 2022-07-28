@@ -1,37 +1,33 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
-import { GlobalDataProps,ComponentData } from '@/types'
+import { GlobalDataProps, ComponentData } from '@/types'
 import { defaultTextTemplates } from '@/uitils/defaultTemplates'
 import ComponentList from '@/components/ComponentList.vue'
 import EditWrapper from '@/components/EditWrapper.vue'
 import PropsTable from '@/components/PropsTable.vue'
 
-
-const store = useStore<GlobalDataProps>();
-const components = computed(()=>{
+const store = useStore<GlobalDataProps>()
+const components = computed(() => {
   return store.state.editor.components
 })
-const currentElement = computed<ComponentData|null>(()=>{
+const currentElement = computed<ComponentData | null>(() => {
   return store.getters.getCurrentElement
 })
 
+const defaultList = ref<any[]>(defaultTextTemplates)
 
-const defaultList = ref<any[]>(defaultTextTemplates);
-
-const onItemClick = (item:ComponentData)=>{
-  store.commit('addComponent',item)
+const onItemClick = (item: ComponentData) => {
+  store.commit('addComponent', item)
 }
 
-const setActive = (id:string)=>{
-  store.commit('setActive',id)
+const setActive = (id: string) => {
+  store.commit('setActive', id)
 }
 
-const handleChange = (e:any)=>{
-  store.commit('updateComponent',e)
+const handleChange = (e: any) => {
+  store.commit('updateComponent', e)
 }
-
-
 </script>
 
 <script lang="ts">
@@ -42,37 +38,51 @@ import LImage from '@/components/LImage.vue'
 export default {
   components: {
     LText,
-    LImage
-  }
+    LImage,
+  },
 }
 </script>
 
 <template>
-<div class="editor-container">
-  <a-layout>
-    <a-layout-sider width="300" style="background: #fff">
-      <div class="sidebar-container">
-        <ComponentList :list="defaultList" @onItemClick="onItemClick" />
-      </div>
-    </a-layout-sider>
-    <a-layout style="padding: 0 24px 24px">
-      <a-layout-content class="preview-container">
-        <p>画布区域</p>
-        <div class="preview-list" id="canvas-area">
-          <EditWrapper v-for="component in components" :key="component.id" :id="component.id" :active="currentElement?.id === component.id" @setActive="setActive">
-             <component :is="component.name"  v-bind="component.props"/>
-          </EditWrapper>
+  <div class="editor-container">
+    <a-layout>
+      <a-layout-sider width="300" style="background: #fff">
+        <div class="sidebar-container">
+          <ComponentList :list="defaultList" @onItemClick="onItemClick" />
         </div>
-      </a-layout-content>
+      </a-layout-sider>
+      <a-layout style="padding: 0 24px 24px">
+        <a-layout-content class="preview-container">
+          <p>画布区域</p>
+          <div class="preview-list" id="canvas-area">
+            <EditWrapper
+              v-for="component in components"
+              :key="component.id"
+              :id="component.id"
+              :active="currentElement?.id === component.id"
+              @setActive="setActive"
+            >
+              <component :is="component.name" v-bind="component.props" />
+            </EditWrapper>
+          </div>
+        </a-layout-content>
+      </a-layout>
+      <a-layout-sider
+        width="300"
+        style="background: #fff"
+        class="settings-panel"
+      >
+        <PropsTable
+          v-if="currentElement?.props"
+          :props="currentElement?.props"
+          @change="handleChange"
+        />
+      </a-layout-sider>
     </a-layout>
-    <a-layout-sider width="300" style="background: #fff" class="settings-panel">
-    <PropsTable v-if="currentElement?.props" :props="currentElement?.props" @change="handleChange" />
-    </a-layout-sider>  
-  </a-layout>
-</div>
+  </div>
 </template>
 
-<style>
+<style lang="less" scoped>
 .editor-container .preview-container {
   padding: 24px;
   margin: 0;

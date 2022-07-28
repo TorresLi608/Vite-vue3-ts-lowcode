@@ -9,7 +9,7 @@
       <l-text :key="index" v-bind="item"></l-text>
     </div>
   </div>
-  <StyledUploader @success="onImageUploaded"></StyledUploader>
+  <StyleUploader @success="onImageUploaded"></StyleUploader>
 </template>
 <script lang="ts">
 import { v4 as uuidv4 } from 'uuid'
@@ -20,10 +20,10 @@ import { ComponentData } from '@/types'
 import { UploadResp } from '@/types/extraType'
 import { getImageDimensions } from '@/uitils/helper'
 import LText from '@/components/LText.vue'
-import StyledUploader from '@/components/StyledUploader.vue'
+import StyleUploader from '@/components/StyleUploader.vue'
 export default defineComponent({
   name: 'component-list',
-  components: { LText, StyledUploader },
+  components: { LText, StyleUploader },
   emits: ['on-item-click'],
   props: {
     list: {

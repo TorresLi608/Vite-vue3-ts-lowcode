@@ -128,7 +128,7 @@ export const mapPropsToForms: PropsToForms = {
   },
   src: {
     component: 'image-processer',
-    text:"Url"
+    text:"src"
   },
   width: {
     text: '宽度',
