@@ -36,7 +36,7 @@ export default defineComponent({
       const componentData: ComponentData = {
         name: 'l-text',
         id: uuidv4(),
-        props,
+        props:{...props},
       }
       context.emit('on-item-click', componentData)
     }
