@@ -13,6 +13,8 @@ const components: ComponentData[] = [
       textAlign: 'left',
       fontFamily: '',
     },
+    isLocked: false,
+    isHidden: false,
   },
   {
     id: uuidv4(),
@@ -24,8 +26,16 @@ const components: ComponentData[] = [
       fontFamily: '',
       lineHeight: '1',
     },
+    isLocked: false,
+    isHidden: false,
   },
-  { id: uuidv4(), name: 'l-text', props: { text: 'hello3', fontSize: '10' } },
+  {
+    id: uuidv4(),
+    name: 'l-text',
+    props: { text: 'hello3', fontSize: '10' },
+    isLocked: false,
+    isHidden: false,
+  },
   {
     id: uuidv4(),
     name: 'l-image',
@@ -33,6 +43,8 @@ const components: ComponentData[] = [
       src: 'https://img2.baidu.com/it/u=3908142881,2459234098&fm=253&fmt=auto&app=138&f=JPEG',
       width: '300px',
     },
+    isLocked:false,
+    isHidden:false,
   },
 ]
 
@@ -53,11 +65,15 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     setActive(state, id: string) {
       state.currentElement = id
     },
-    updateComponent(state, { key, value }) {
+    updateComponent(state, { key, value, id, isRoot }) {
       const updateComponent = state.components.find(
-        (item) => state.currentElement === item.id
+        (item) => item.id === (id || state.currentElement)
       )
       if (updateComponent) {
+        if (isRoot) {
+          (updateComponent as any)[key] = value
+          return
+        }
         updateComponent.props[key] = value
       }
     },

@@ -24,7 +24,7 @@
           <template v-slot:icon v-else><LockOutlined /> </template>
         </a-button>
       </a-tooltip>
-      <!-- <inline-edit class="edit-area" :value="element.layerName" @change="(value) => {handleChange(element.id, 'layerName', value)}"></inline-edit> -->
+      <inline-edit class="edit-area" :value="element.layerName || '图层'" @change="(value) => {handleChange(element.id, 'layerName', value)}"></inline-edit>
       <a-tooltip title="拖动排序">
         <a-button shape="circle" class="handle">
           <template v-slot:icon><DragOutlined /> </template
@@ -40,7 +40,7 @@ import { defineComponent, PropType } from 'vue'
 import Draggable from "vuedraggable";
 import { EyeOutlined, EyeInvisibleOutlined, LockOutlined, UnlockOutlined, DragOutlined } from '@ant-design/icons-vue'
 import { ComponentData } from '@/types'
-// import InlineEdit from '@/components/InlineEdit.vue'
+import InlineEdit from '@/components/InlineEdit.vue'
 export default defineComponent({ 
   props: {
     list: {
@@ -55,6 +55,7 @@ export default defineComponent({
   emits: ['select', 'change'],
   components: {
     Draggable,
+    InlineEdit,
     EyeOutlined,
     EyeInvisibleOutlined,
     LockOutlined,
