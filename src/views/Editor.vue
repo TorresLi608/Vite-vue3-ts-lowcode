@@ -7,6 +7,7 @@ import ComponentList from '@/components/ComponentList.vue'
 import EditWrapper from '@/components/EditWrapper.vue'
 import PropsTable from '@/components/PropsTable.vue'
 import LayerList from '@/components/LayerList.vue'
+import EditorGroup from '@/components/EditorGroup.vue'
 
 const activeKey = ref('1')
 const store = useStore<GlobalDataProps>()
@@ -82,6 +83,7 @@ export default {
         <a-tabs v-model:activeKey="activeKey" centered>
           <a-tab-pane key="1" tab="属性设置">
             <template v-if="currentElement?.props">
+            <EditorGroup :props="currentElement?.props" />
               <PropsTable
                 v-if="!currentElement.isLocked"
                 :props="currentElement?.props"

@@ -1,5 +1,6 @@
 import { Module } from 'vuex'
 import { ComponentData, EditorProps, GlobalDataProps } from '@/types'
+import { textDefaultProps,imageDefaultProps } from '@/uitils/defaultProps'
 import { v4 as uuidv4 } from 'uuid'
 
 const components: ComponentData[] = [
@@ -7,6 +8,7 @@ const components: ComponentData[] = [
     id: uuidv4(),
     name: 'l-text',
     props: {
+      ...textDefaultProps,
       text: 'hello1',
       fontSize: '20',
       color: '#fa541c',
@@ -20,6 +22,7 @@ const components: ComponentData[] = [
     id: uuidv4(),
     name: 'l-text',
     props: {
+      ...textDefaultProps,
       text: 'hello2',
       fontSize: '15',
       textAlign: 'right',
@@ -32,7 +35,7 @@ const components: ComponentData[] = [
   {
     id: uuidv4(),
     name: 'l-text',
-    props: { text: 'hello3', fontSize: '10' },
+    props: { ...textDefaultProps, text: 'hello3', fontSize: '10' },
     isLocked: false,
     isHidden: false,
   },
@@ -40,11 +43,12 @@ const components: ComponentData[] = [
     id: uuidv4(),
     name: 'l-image',
     props: {
+      ...imageDefaultProps,
       src: 'https://img2.baidu.com/it/u=3908142881,2459234098&fm=253&fmt=auto&app=138&f=JPEG',
       width: '300px',
     },
-    isLocked:false,
-    isHidden:false,
+    isLocked: false,
+    isHidden: false,
   },
 ]
 
@@ -71,7 +75,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       )
       if (updateComponent) {
         if (isRoot) {
-          (updateComponent as any)[key] = value
+          ;(updateComponent as any)[key] = value
           return
         }
         updateComponent.props[key] = value
