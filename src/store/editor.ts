@@ -9,7 +9,7 @@ const components: ComponentData[] = [
     props: {
       text: 'hello1',
       fontSize: '20',
-      color: 'red',
+      color: '#fa541c',
       textAlign: 'left',
       fontFamily: '',
     },
