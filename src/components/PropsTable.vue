@@ -24,10 +24,9 @@
       </div>
     </div>
   </div>
-  {{finalProps}}
 </template>
 <script lang="ts">
-import { reduce } from 'lodash'
+import { reduce } from 'lodash-es'
 import { defineComponent, PropType, computed, VNode } from 'vue'
 import { TextComponentProps } from '@/uitils/defaultProps'
 import { mapPropsToForms } from '@/uitils/propsMap'

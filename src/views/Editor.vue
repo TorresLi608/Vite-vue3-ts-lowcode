@@ -5,7 +5,6 @@ import { GlobalDataProps, ComponentData } from '@/types'
 import { defaultTextTemplates } from '@/uitils/defaultTemplates'
 import ComponentList from '@/components/ComponentList.vue'
 import EditWrapper from '@/components/EditWrapper.vue'
-import PropsTable from '@/components/PropsTable.vue'
 import LayerList from '@/components/LayerList.vue'
 import EditorGroup from '@/components/EditorGroup.vue'
 
@@ -31,10 +30,9 @@ const setActive = (id: string) => {
 const handleChange = (e: ComponentData) => {
   store.commit('updateComponent', e)
 }
-if(!store.state.editor.currentElement){
-  setActive(components.value[0].id);
+if (!store.state.editor.currentElement) {
+  setActive(components.value[0].id)
 }
-
 </script>
 
 <script lang="ts">
@@ -62,7 +60,7 @@ export default {
         <a-layout-content class="preview-container">
           <p>画布区域</p>
           <div class="preview-list" id="canvas-area">
-            <template  v-for="component in components"  :key="component.id">
+            <template v-for="component in components" :key="component.id">
               <EditWrapper
                 v-if="!component.isHidden"
                 :id="component.id"
@@ -83,10 +81,9 @@ export default {
         <a-tabs v-model:activeKey="activeKey" centered>
           <a-tab-pane key="1" tab="属性设置">
             <template v-if="currentElement?.props">
-            <EditorGroup :props="currentElement?.props" />
-              <PropsTable
+              <EditorGroup
                 v-if="!currentElement.isLocked"
-                :props="currentElement?.props"
+                :props="(currentElement?.props)"
                 @change="handleChange"
               />
               <a-empty v-else>

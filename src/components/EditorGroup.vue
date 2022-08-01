@@ -1,11 +1,22 @@
 <template>
   <div class="edit-groups">
-    {{newGroups}}
+    <a-collapse v-model:activeKey="currentKey">
+      <a-collapse-panel
+        v-for="(item, index) in editorGroups"
+        :key="`item-${index}`"
+        :header="item.text"
+      >
+        <props-table :props="item.props" @change="handleChange"></props-table>
+      </a-collapse-panel>
+    </a-collapse>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType ,computed} from 'vue'
+import { difference } from 'lodash-es'
+import { defineComponent, PropType, computed, ref } from 'vue'
 import { AllComponentProps } from '@/uitils/defaultProps'
+import PropsTable from '@/components/PropsTable.vue'
+
 export interface GroupProps {
   text: string
   items: string[]
@@ -41,6 +52,8 @@ const defaultEditGroups: GroupProps[] = [
 ]
 export default defineComponent({
   name: 'EditorGroup',
+  components: { PropsTable },
+  emits: ['change'],
   props: {
     props: {
       type: Object as PropType<AllComponentProps>,
@@ -51,15 +64,45 @@ export default defineComponent({
       default: [...defaultEditGroups],
     },
   },
-  setup(props) {
-    const newGroups = computed(()=>{
-      const allNormalProps = props.groups.reduce((prev,current)=>{
-        return [...prev,...current.items]
-      },[] as string[])
-      console.log(allNormalProps,'allNormalProps')
+  setup(props, { emit }) {
+    const currentKey = ref<string>('item-0')
+    const newGroups = computed(() => {
+      const allNormalProps = props.groups.reduce((prev, current) => {
+        return [...prev, ...current.items]
+      }, [] as string[])
+      const specialProps = difference(Object.keys(props.props), allNormalProps)
+      return [
+        {
+          text: '基础信息',
+          items: specialProps,
+        },
+        ...props.groups,
+      ]
     })
+
+    const editorGroups = computed(() => {
+      const editorGroups = newGroups.value.map((group) => {
+        const propsMap = {} as AllComponentProps
+        group.items.forEach((item) => {
+          const key = item as keyof AllComponentProps
+          propsMap[key] = props.props[key]
+        })
+        return {
+          ...group,
+          props: propsMap,
+        }
+      })
+      return editorGroups
+    })
+
+    const handleChange = (e: any) => {
+      emit('change', e)
+    }
+
     return {
-      newGroups
+      editorGroups,
+      currentKey,
+      handleChange
     }
   },
 })

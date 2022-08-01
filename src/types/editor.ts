@@ -1,5 +1,6 @@
+import { AllComponentProps } from '@/uitils/defaultProps'
 export interface ComponentData {
-  props: { [key: string]: any }
+  props: Partial<AllComponentProps>;
   id: string
   name: string
   // 图层是否隐藏
