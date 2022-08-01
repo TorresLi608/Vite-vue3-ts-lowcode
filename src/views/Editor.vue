@@ -32,9 +32,14 @@ const setActive = (id: string) => {
   store.commit('setActive', id)
 }
 
-const handleChange = (e: ComponentData) => {
+const handleChange = (e: any) => {
   store.commit('updateComponent', e)
 }
+
+const handleChangePage = (e: any) => {
+  store.commit('updatePage',e)
+}
+
 if (!store.state.editor.currentElement) {
   setActive(components.value[0].id)
 }
@@ -110,7 +115,7 @@ export default {
             />
           </a-tab-pane>
           <a-tab-pane key="3" tab="页面设置">
-            <PropsTable :props="page.props"></PropsTable>
+            <PropsTable :props="page.props" @change="handleChangePage"></PropsTable>
           </a-tab-pane>
         </a-tabs>
       </a-layout-sider>

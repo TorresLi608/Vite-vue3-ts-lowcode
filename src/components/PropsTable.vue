@@ -118,6 +118,9 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+.select-clazz{
+  min-width: 200px;
+}
 .prop-item {
   display: flex;
   margin-bottom: 10px;

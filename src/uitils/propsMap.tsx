@@ -1,4 +1,4 @@
-import { VNode,h } from 'vue'
+import { VNode, h } from 'vue'
 import { AllFormProps } from '@/uitils/defaultProps'
 
 export interface PropToForm {
@@ -31,13 +31,12 @@ const fontFamilyArr = [
 // })
 
 // jsx 方式
-const fontFamilyOptions = fontFamilyArr.map(item=>{
+const fontFamilyOptions = fontFamilyArr.map((item) => {
   return {
-    text:<span style={{fontFamily:item.value}}>{item.text}</span>,
-    value:item.value
+    text: <span style={{ fontFamily: item.value }}>{item.text}</span>,
+    value: item.value,
   }
 })
-
 
 export type PropsToForms = {
   [P in keyof AllFormProps]?: PropToForm
@@ -48,13 +47,13 @@ const defaultHandler = {
   eventName: 'change',
   valueProp: 'value',
   intialTransform: (v: any) => v,
-  afterTransform: (e: any) => e
+  afterTransform: (e: any) => e,
 }
 
 const pxToNumberHandler: PropToForm = {
   component: 'a-input-number',
-  initalTransform: (v: string) => v ? parseInt(v): 0,
-  afterTransform: (e: number) => e ? `${e}px` : '',
+  initalTransform: (v: string) => (v ? parseInt(v) : 0),
+  afterTransform: (e: number) => (e ? `${e}px` : ''),
 }
 
 export const mapPropsToForms: PropsToForms = {
@@ -92,67 +91,67 @@ export const mapPropsToForms: PropsToForms = {
     component: 'a-select',
     subComponent: 'a-select-option',
     text: '字体',
-    options: [
-      { value: '', text: '无' },
-      ...fontFamilyOptions,
-    ],
+    options: [{ value: '', text: '无' }, ...fontFamilyOptions],
   },
   fontWeight: {
     component: 'icon-switch',
+    text:"加粗",
     initalTransform: (v: string) => v === 'bold',
-    afterTransform: (e: boolean) => e ? 'bold' : 'normal',
+    afterTransform: (e: boolean) => (e ? 'bold' : 'normal'),
     valueProp: 'checked',
-    extraProps: { iconName: 'BoldOutlined', tip: '加粗' }
+    extraProps: { iconName: 'BoldOutlined', tip: '加粗' },
   },
   fontStyle: {
     component: 'icon-switch',
+    text:"斜体",
     initalTransform: (v: string) => v === 'italic',
-    afterTransform: (e: boolean) => e ? 'italic' : 'normal',
+    afterTransform: (e: boolean) => (e ? 'italic' : 'normal'),
     valueProp: 'checked',
-    extraProps: { iconName: 'ItalicOutlined', tip: '斜体' }
+    extraProps: { iconName: 'ItalicOutlined', tip: '斜体' },
   },
   textDecoration: {
     component: 'icon-switch',
+    text:"下划线",
     initalTransform: (v: string) => v === 'underline',
-    afterTransform: (e: boolean) => e ? 'underline' : 'none',
+    afterTransform: (e: boolean) => (e ? 'underline' : 'none'),
     valueProp: 'checked',
-    extraProps: { iconName: 'UnderlineOutlined', tip: '下划线' }
+    extraProps: { iconName: 'UnderlineOutlined', tip: '下划线' },
   },
   color: {
     component: 'color-picker',
-    text: '字体颜色'
+    text: '字体颜色',
   },
   backgroundColor: {
     component: 'color-picker',
-    text: '背景颜色'
+    text: '背景颜色',
   },
   src: {
     component: 'image-processer',
-    text:"src"
+    text: 'src',
   },
   width: {
     text: '宽度',
-    ...pxToNumberHandler
+    ...pxToNumberHandler,
   },
   height: {
     text: '高度',
-    ...pxToNumberHandler
+    ...pxToNumberHandler,
   },
   paddingLeft: {
     ...pxToNumberHandler,
-    text: '左边距'
+    text: '左边距',
   },
   paddingRight: {
     ...pxToNumberHandler,
-    text: '右边距'
+    text: '右边距',
   },
   paddingTop: {
     ...pxToNumberHandler,
-    text: '上边距'
+    text: '上边距',
   },
   paddingBottom: {
     ...pxToNumberHandler,
-    text: '下边距'
+    text: '下边距',
   },
   // commonComponentProps - border type
   borderStyle: {
@@ -164,45 +163,45 @@ export const mapPropsToForms: PropsToForms = {
       { value: 'none', text: '无' },
       { value: 'solid', text: '实线' },
       { value: 'dashed', text: '破折线' },
-      { value: 'dotted', text: '点状线' }
-    ]
+      { value: 'dotted', text: '点状线' },
+    ],
   },
   borderColor: {
     ...defaultHandler,
     component: 'color-picker',
-    text: '边框颜色'
+    text: '边框颜色',
   },
   borderWidth: {
     ...pxToNumberHandler,
     component: 'a-slider',
     text: '边框宽度',
-    extraProps: { min: 0, max: 20 }
+    extraProps: { min: 0, max: 20 },
   },
   borderRadius: {
     ...pxToNumberHandler,
     component: 'a-slider',
     text: '边框圆角',
-    extraProps: { min: 0, max: 200 }
+    extraProps: { min: 0, max: 200 },
   },
   // commonComponentProps - opacity and boxShadow
   opacity: {
     component: 'a-slider',
     text: '透明度',
-    initalTransform: (v: number) => v ? v * 100 : 100,
-    afterTransform: (e: number) => (e / 100),
-    extraProps: { min: 0, max: 100, reverse: true }
+    initalTransform: (v: number) => (v ? v * 100 : 100),
+    afterTransform: (e: number) => e / 100,
+    extraProps: { min: 0, max: 100, reverse: true },
   },
   boxShadow: {
-    component: 'shadow-picker'
+    component: 'shadow-picker',
   },
   // commonComponentProps - positions
   left: {
     ...pxToNumberHandler,
-    text: 'X轴坐标'
+    text: 'X轴坐标',
   },
   top: {
     ...pxToNumberHandler,
-    text: 'Y轴坐标'
+    text: 'Y轴坐标',
   },
   // commonComponentProps - actions and urls
   // actions
@@ -213,13 +212,13 @@ export const mapPropsToForms: PropsToForms = {
     text: '点击',
     options: [
       { value: '', text: '无' },
-      { value: 'to', text: '跳转到 URL' }
-    ]
+      { value: 'to', text: '跳转到 URL' },
+    ],
   },
   url: {
     ...defaultHandler,
     afterTransform: (e: any) => e.target.value,
-    text: '链接'
+    text: '链接',
   },
   backgroundImage: {
     ...defaultHandler,
@@ -236,7 +235,29 @@ export const mapPropsToForms: PropsToForms = {
       } else {
         return ''
       }
-    },   
-    afterTransform: (e: string) => e ? `url('${e}')` : ''
+    },
+    afterTransform: (e: string) => (e ? `url('${e}')` : ''),
+  },
+  backgroundRepeat: {
+    component: 'a-select',
+    subComponent: 'a-select-option',
+    text: '背景重复',
+    extraProps: { class: 'select-clazz' },
+    options: [
+      { value: 'repeat', text: '默认' },
+      { value: 'no-repeat', text: '不重复' },
+      { value: 'repeat-x', text: '背景图像将在水平方向重复' },
+      { value: 'repeat-y', text: '背景图像将在垂直方向重复' },
+    ],
+  },
+  backgroundSize: {
+    component: 'a-select',
+    subComponent: 'a-select-option',
+    text: '背景尺寸',
+    extraProps: { class: 'select-clazz' },
+    options: [
+      { value: 'contain', text: '图片等比' },
+      { value: 'cover', text: '根据画布占满' },
+    ],
   },
 }

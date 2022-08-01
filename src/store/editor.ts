@@ -4,6 +4,7 @@ import {
   textDefaultProps,
   imageDefaultProps,
   AllComponentProps,
+  PageProps,
 } from '@/uitils/defaultProps'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -97,6 +98,9 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         updateComponent.props[key as keyof AllComponentProps] = value
       }
     },
+    updatePage(state,{key,value}){
+      state.page.props[key as keyof PageProps] = value
+    }
   },
 }
 

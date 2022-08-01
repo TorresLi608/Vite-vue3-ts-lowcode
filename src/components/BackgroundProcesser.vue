@@ -1,11 +1,11 @@
 <template>
   <div class="background-processer">
-    <styled-uploader 
+    <style-uploader 
       v-if="!value"
       :value="value"
       @success="onImageUploaded"
     >
-    </styled-uploader>
+    </style-uploader>
     <image-processer
       v-else
       :value="value"
@@ -20,7 +20,8 @@
 import { defineComponent } from 'vue'
 import { message } from 'ant-design-vue'
 import ImageProcesser from '@/components/ImageProcesser.vue'
-import StyledUploader from '@/components/ShadowPicker.vue'
+import StyleUploader from '@/components/StyleUploader.vue'
+import { UploadResp } from '@/types/extraType'
 export default defineComponent({
   props: {
     value: {
@@ -30,14 +31,14 @@ export default defineComponent({
   },
   components: {
     ImageProcesser,
-    StyledUploader
+    StyleUploader
   },
   emits: ['change'],
   setup (props, context) {
-    const onImageUploaded = (data: {resp:any; file: File}) => {
+    const onImageUploaded = (data: {resp:UploadResp; file: File}) => {
       const { resp } = data
       message.success('上传成功')
-      context.emit('change', resp.data.urls[0])
+      context.emit('change', resp.data.url)
     }
     const handleUploadUrl = (url: string) => {
       context.emit('change', url)

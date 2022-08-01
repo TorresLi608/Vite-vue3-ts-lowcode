@@ -2,7 +2,7 @@ import { AllComponentProps } from '@/uitils/defaultProps'
 
 export interface pageData {
   props: { [key: string]: any }
-  title: string
+  title?: string
 }
 export interface ComponentData {
   props: Partial<AllComponentProps>
