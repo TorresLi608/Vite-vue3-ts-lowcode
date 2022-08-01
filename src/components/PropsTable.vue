@@ -17,7 +17,7 @@
               :key="k"
               :value="option.value"
             >
-            <RenderVnodes :vNode="option.text"></RenderVnodes>
+              <RenderVnodes :vNode="option.text"></RenderVnodes>
             </component>
           </template>
         </component>
@@ -34,6 +34,8 @@ import RenderVnodes from '@/components/RenderVnodes'
 import ColorPicker from '@/components/ColorPicker.vue'
 import ImageProcesser from '@/components/ImageProcesser.vue'
 import ShadowPicker from '@/components/ShadowPicker.vue'
+import BackgroundProcesser from '@/components/BackgroundProcesser.vue'
+import IconSwitch from '@/components/IconSwitch.vue'
 
 interface FormProps {
   component: string
@@ -48,11 +50,13 @@ interface FormProps {
 }
 export default defineComponent({
   name: 'PropsTable',
-  components:{
+  components: {
     RenderVnodes,
     ColorPicker,
     ImageProcesser,
-    ShadowPicker
+    ShadowPicker,
+    BackgroundProcesser,
+    IconSwitch,
   },
   props: {
     props: {
@@ -113,19 +117,22 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .prop-item {
   display: flex;
   margin-bottom: 10px;
   align-items: center;
+  justify-content: space-between;
 }
 
 .label {
   width: 18%;
+  flex-shrink: 1;
 }
 
 .prop-component {
   width: 70%;
+  flex: 1;
 }
 
 .prop-item.no-text {

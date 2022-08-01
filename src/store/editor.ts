@@ -1,6 +1,10 @@
 import { Module } from 'vuex'
 import { ComponentData, EditorProps, GlobalDataProps } from '@/types'
-import { textDefaultProps,imageDefaultProps } from '@/uitils/defaultProps'
+import {
+  textDefaultProps,
+  imageDefaultProps,
+  AllComponentProps,
+} from '@/uitils/defaultProps'
 import { v4 as uuidv4 } from 'uuid'
 
 const components: ComponentData[] = [
@@ -52,10 +56,22 @@ const components: ComponentData[] = [
   },
 ]
 
+const pageDefaultProps = {
+  backgroundColor: '#ffffff',
+  backgroundImage: 'url("https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202003%2F30%2F20200330084409_gxmqo.thumb.1000_0.jpg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1661925311&t=11a616e6a6b017526b6ecb1f460f6162")',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+  height: '560px',
+}
+
 const editor: Module<EditorProps, GlobalDataProps> = {
   state: {
     components,
     currentElement: '',
+    page: {
+      title: 'Test',
+      props: pageDefaultProps,
+    },
   },
   getters: {
     getCurrentElement(state) {
@@ -78,7 +94,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           ;(updateComponent as any)[key] = value
           return
         }
-        updateComponent.props[key] = value
+        updateComponent.props[key as keyof AllComponentProps] = value
       }
     },
   },

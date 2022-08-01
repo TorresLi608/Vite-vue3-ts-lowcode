@@ -13,6 +13,7 @@
         <img :src="baseImageUrl" id="processed-image" ref="cropperImg" />
       </div>
     </a-modal>
+    <!-- 图片预览 -->
     <!-- <div
       class="image-preview"
       :style="{ backgroundImage: backgrondUrl }"

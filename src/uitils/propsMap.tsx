@@ -1,5 +1,5 @@
 import { VNode,h } from 'vue'
-import { TextComponentProps } from '@/uitils/defaultProps'
+import { AllFormProps } from '@/uitils/defaultProps'
 
 export interface PropToForm {
   component: string
@@ -40,7 +40,7 @@ const fontFamilyOptions = fontFamilyArr.map(item=>{
 
 
 export type PropsToForms = {
-  [P in keyof TextComponentProps]?: PropToForm
+  [P in keyof AllFormProps]?: PropToForm
 }
 
 const defaultHandler = {
@@ -229,7 +229,6 @@ export const mapPropsToForms: PropsToForms = {
         const reg = /\(["'](.+)["']\)/g
         const matches = reg.exec(v)
         if (matches && matches.length > 1) {
-          console.log(matches)
           return matches[1]
         } else {
           return ''

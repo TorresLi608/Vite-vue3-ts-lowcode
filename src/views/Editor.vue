@@ -7,11 +7,16 @@ import ComponentList from '@/components/ComponentList.vue'
 import EditWrapper from '@/components/EditWrapper.vue'
 import LayerList from '@/components/LayerList.vue'
 import EditorGroup from '@/components/EditorGroup.vue'
+import PropsTable from '@/components/PropsTable.vue'
 
 const activeKey = ref('1')
 const store = useStore<GlobalDataProps>()
 const components = computed(() => {
   return store.state.editor.components
+})
+
+const page = computed(() => {
+  return store.state.editor.page
 })
 const currentElement = computed<ComponentData | null>(() => {
   return store.getters.getCurrentElement || components.value[0]
@@ -60,16 +65,18 @@ export default {
         <a-layout-content class="preview-container">
           <p>画布区域</p>
           <div class="preview-list" id="canvas-area">
-            <template v-for="component in components" :key="component.id">
-              <EditWrapper
-                v-if="!component.isHidden"
-                :id="component.id"
-                :active="currentElement?.id === component.id"
-                @setActive="setActive(component.id)"
-              >
-                <component :is="component.name" v-bind="component.props" />
-              </EditWrapper>
-            </template>
+            <div class="body-container" :style="page.props">
+              <template v-for="component in components" :key="component.id">
+                <EditWrapper
+                  v-if="!component.isHidden"
+                  :id="component.id"
+                  :active="currentElement?.id === component.id"
+                  @setActive="setActive(component.id)"
+                >
+                  <component :is="component.name" v-bind="component.props" />
+                </EditWrapper>
+              </template>
+            </div>
           </div>
         </a-layout-content>
       </a-layout>
@@ -83,7 +90,7 @@ export default {
             <template v-if="currentElement?.props">
               <EditorGroup
                 v-if="!currentElement.isLocked"
-                :props="(currentElement?.props)"
+                :props="currentElement?.props"
                 @change="handleChange"
               />
               <a-empty v-else>
@@ -102,7 +109,9 @@ export default {
               @select="setActive"
             />
           </a-tab-pane>
-          <a-tab-pane key="3" tab="页面设置">页面设置</a-tab-pane>
+          <a-tab-pane key="3" tab="页面设置">
+            <PropsTable :props="page.props"></PropsTable>
+          </a-tab-pane>
         </a-tabs>
       </a-layout-sider>
     </a-layout>
