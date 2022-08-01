@@ -127,7 +127,7 @@ export const mapPropsToForms: PropsToForms = {
   },
   src: {
     component: 'image-processer',
-    text: 'src',
+    text: '图片地址',
   },
   width: {
     text: '宽度',
