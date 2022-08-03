@@ -37,7 +37,13 @@ const handleChange = (e: any) => {
 }
 
 const handleChangePage = (e: any) => {
-  store.commit('updatePage',e)
+  store.commit('updatePage', e)
+}
+
+const updatePosition = (data: { id: string; top: number; left: number }) => {
+  const { id, top, left } = data
+  store.commit('updateComponent', { id, key: 'top', value: top + 'px' })
+  store.commit('updateComponent', { id, key: 'left', value: left + 'px' })
 }
 
 if (!store.state.editor.currentElement) {
@@ -76,7 +82,9 @@ export default {
                   v-if="!component.isHidden"
                   :id="component.id"
                   :active="currentElement?.id === component.id"
-                  @setActive="setActive(component.id)"
+                  :props="component.props"
+                  @setActive="setActive"
+                  @updatePosition="updatePosition"
                 >
                   <component :is="component.name" v-bind="component.props" />
                 </EditWrapper>
@@ -115,7 +123,10 @@ export default {
             />
           </a-tab-pane>
           <a-tab-pane key="3" tab="页面设置">
-            <PropsTable :props="page.props" @change="handleChangePage"></PropsTable>
+            <PropsTable
+              :props="page.props"
+              @change="handleChangePage"
+            ></PropsTable>
           </a-tab-pane>
         </a-tabs>
       </a-layout-sider>

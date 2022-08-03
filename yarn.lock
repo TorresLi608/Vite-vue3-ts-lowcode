@@ -1263,7 +1263,14 @@ vue-types@^3.0.0:
   dependencies:
     is-plain-object "3.0.1"
 
-vue@^3.2.25:
+vue3-ruler-tool@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.npmmirror.com/vue3-ruler-tool/-/vue3-ruler-tool-0.0.1.tgz#133641baf47158b6a06082f82690b2308c8f070a"
+  integrity sha512-NXZQO/m/+bPJ7pVklo/d8+27JcJHdWYSu7BEtRgiX6ofB3zhkuNuny8053xiuKCGzVmVoXzL+1ravN6f+crSSw==
+  dependencies:
+    vue "^3.2.6"
+
+vue@^3.2.25, vue@^3.2.6:
   version "3.2.37"
   resolved "https://registry.npmmirror.com/vue/-/vue-3.2.37.tgz#da220ccb618d78579d25b06c7c21498ca4e5452e"
   integrity sha512-bOKEZxrm8Eh+fveCqS1/NkG/n6aMidsI6hahas7pa0w/l7jkbssJVsRhVDs07IdDq7h9KHswZOgItnwJAgtVtQ==
