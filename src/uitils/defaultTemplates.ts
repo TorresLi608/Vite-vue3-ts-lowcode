@@ -6,12 +6,13 @@ export const defaultTextTemplates = [
     fontSize: '30px',
     fontWeight: 'bold',
     tag: 'h2',
-    width: '100px',
+    position: 'absolute',
   },
   {
     text: '正文内容',
     tag: 'p',
     width: '100px',
+    position: 'absolute',
   },
   {
     text: '链接内容',
@@ -19,6 +20,7 @@ export const defaultTextTemplates = [
     textDecoration: 'underline',
     tag: 'p',
     width: '100px',
+    position: 'absolute',
   },
   {
     text: '按钮内容',

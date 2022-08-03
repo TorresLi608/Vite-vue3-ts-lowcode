@@ -1,8 +1,9 @@
 <script lang="ts" setup>
+import { pickBy, forEach } from 'lodash-es'
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps, ComponentData } from '@/types'
-import { defaultTextTemplates } from '@/uitils/defaultTemplates'
+import defaultTextTemplates from '@/uitils/defaultTemplates'
 import ComponentList from '@/components/ComponentList.vue'
 import EditWrapper from '@/components/EditWrapper.vue'
 import LayerList from '@/components/LayerList.vue'
@@ -41,9 +42,11 @@ const handleChangePage = (e: any) => {
 }
 
 const updatePosition = (data: { id: string; top: number; left: number }) => {
-  const { id, top, left } = data
-  store.commit('updateComponent', { id, key: 'top', value: top + 'px' })
-  store.commit('updateComponent', { id, key: 'left', value: left + 'px' })
+  const { id } = data
+  const updatedData = pickBy<number>(data, (v, k) => k !== 'id')
+  forEach(updatedData, (v, key) => {
+    store.commit('updateComponent', { id, key, value: v + 'px' })
+  })
 }
 
 if (!store.state.editor.currentElement) {
