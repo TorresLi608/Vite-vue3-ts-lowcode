@@ -6,7 +6,7 @@
         <component
           v-if="value"
           :is="value.component"
-          :value.valueProp="value.value"
+          :[value.valueProp]="value.value"
           v-bind="value.extraProps"
           v-on="value.events"
         >

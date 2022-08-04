@@ -128,6 +128,7 @@ export default defineComponent({
     const startMove = (e: MouseEvent) => {
       const currentElement = editWrapperRef.value
       if (!currentElement) return
+      onItemClick(props.id)
       if (currentElement) {
         const { left, top } = currentElement.getBoundingClientRect()
         gap.x = e.clientX - left
