@@ -121,7 +121,6 @@ export default {
           </a-tab-pane>
           <a-tab-pane key="2" tab="图层设置" force-render>
             <LayerList
-              v-if="currentElement"
               :list="components"
               :selectedId="currentElement ? currentElement.id : ''"
               @change="handleChange"
