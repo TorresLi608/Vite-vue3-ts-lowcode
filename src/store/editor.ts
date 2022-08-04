@@ -1,4 +1,8 @@
 import { Module } from 'vuex'
+import { cloneDeep } from 'lodash-es'
+import { v4 as uuidv4 } from 'uuid'
+import { message } from 'ant-design-vue'
+import store from './index'
 import { ComponentData, EditorProps, GlobalDataProps } from '@/types'
 import {
   textDefaultProps,
@@ -6,8 +10,7 @@ import {
   AllComponentProps,
   PageProps,
 } from '@/uitils/defaultProps'
-import { v4 as uuidv4 } from 'uuid'
-
+export type MoveDirection = 'Up' | 'Down' | 'Left' | 'Right'
 const components: ComponentData[] = [
   {
     id: uuidv4(),
@@ -80,6 +83,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       title: 'Test',
       props: pageDefaultProps,
     },
+    copiedComponent: undefined,
   },
   getters: {
     getCurrentElement(state) {
@@ -92,6 +96,63 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     },
     setActive(state, id: string) {
       state.currentElement = id
+    },
+    // 复制组件
+    copyComponent(state, id: string) {
+      const currentComponent = state.components.find((item) => item.id === id)
+      if (currentComponent) {
+        state.copiedComponent = currentComponent
+        message.success('已拷贝当前图层', 1)
+      }
+    },
+    // 粘贴组件
+    pasteCopiedComponent(state) {
+      const copiedComponent = state.copiedComponent
+      if (!copiedComponent) return
+      const clone = cloneDeep(copiedComponent)
+      clone.id = uuidv4()
+      clone.layerName = copiedComponent.layerName + '副本'
+      state.components.push(clone)
+      message.success('粘贴当前图层成功', 1)
+    },
+    deleteComponent(state, id) {
+      const currentComponent = state.components.find((item) => item.id === id)
+      if (currentComponent) {
+        state.components = state.components.filter((item) => item.id !== id)
+      }
+    },
+    moveComponent(state, data: { direction: MoveDirection; amount: number; id: string }) {
+      const currentComponent = state.components.find((component) => component.id === data.id)
+      if (currentComponent) {
+        const oldTop = parseInt(currentComponent.props.top || '0')
+        const oldLeft = parseInt(currentComponent.props.left || '0')
+        const { direction, amount } = data
+        switch (direction) {
+          case 'Up': {
+            const newValue = oldTop - amount + 'px'
+            store.commit('updateComponent', { key: 'top', value: newValue, id: data.id })
+            break
+          }
+          case 'Down': {
+            const newValue = oldTop + amount + 'px'
+            store.commit('updateComponent', { key: 'top', value: newValue, id: data.id })
+            break
+          }
+          case 'Left': {
+            const newValue = oldLeft - amount + 'px'
+            store.commit('updateComponent', { key: 'left', value: newValue, id: data.id })
+            break
+          }
+          case 'Right': {
+            const newValue = oldLeft + amount + 'px'
+            store.commit('updateComponent', { key: 'left', value: newValue, id: data.id })
+            break
+          }
+
+          default:
+            break
+        }
+      }
     },
     updateComponent(state, { key, value, id, isRoot }) {
       const updateComponent = state.components.find(

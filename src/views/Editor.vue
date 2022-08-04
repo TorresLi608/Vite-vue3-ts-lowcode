@@ -2,6 +2,7 @@
 import { pickBy, forEach } from 'lodash-es'
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
+import initHotKeys from '@/plugins/hotkeys'
 import { GlobalDataProps, ComponentData } from '@/types'
 import defaultTextTemplates from '@/uitils/defaultTemplates'
 import ComponentList from '@/components/ComponentList.vue'
@@ -9,6 +10,8 @@ import EditWrapper from '@/components/EditWrapper.vue'
 import LayerList from '@/components/LayerList.vue'
 import EditorGroup from '@/components/EditorGroup.vue'
 import PropsTable from '@/components/PropsTable.vue'
+
+initHotKeys()
 
 const activeKey = ref('1')
 const store = useStore<GlobalDataProps>()
@@ -20,7 +23,7 @@ const page = computed(() => {
   return store.state.editor.page
 })
 const currentElement = computed<ComponentData | null>(() => {
-  return store.getters.getCurrentElement || components.value[0]
+  return store.getters.getCurrentElement
 })
 
 const defaultList = ref<any[]>(defaultTextTemplates)

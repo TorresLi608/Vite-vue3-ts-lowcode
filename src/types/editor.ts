@@ -18,7 +18,6 @@ export interface ComponentData {
 export interface EditorProps {
   components: ComponentData[]
   currentElement: string
-  page:pageData
+  page: pageData
+  copiedComponent?: ComponentData
 }
-
-
