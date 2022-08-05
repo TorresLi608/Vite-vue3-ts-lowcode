@@ -9,7 +9,7 @@
       class="ant-input"
     />
     <slot v-else :text="innerValue"
-      ><span>{{ innerValue }}</span></slot
+      ><span @click.stop="handleClick">{{ innerValue }}</span></slot
     >
   </div>
 </template>

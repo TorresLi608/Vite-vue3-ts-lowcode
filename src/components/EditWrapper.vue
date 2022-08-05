@@ -225,6 +225,8 @@ export default defineComponent({
   z-index: 1500;
 }
 .edit-wrapper .resizers {
+  width: 0 !important;
+  height: 0 !important;
   display: none;
 }
 .edit-wrapper.active .resizers {

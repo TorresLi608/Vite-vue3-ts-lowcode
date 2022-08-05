@@ -1,6 +1,6 @@
 import { AllComponentProps } from '@/uitils/defaultProps'
 
-export interface pageData {
+export interface PageData {
   props: { [key: string]: any }
   title?: string
 }
@@ -15,9 +15,20 @@ export interface ComponentData {
   // 图层名称
   layerName?: string
 }
+
+export interface HistoryProps {
+  id: string;
+  componentId: string;
+  type: 'add' | 'delete' | 'modify';
+  data: any;
+  index?: number;
+}
+
 export interface EditorProps {
   components: ComponentData[]
   currentElement: string
-  page: pageData
+  page: PageData
   copiedComponent?: ComponentData
+  histories:HistoryProps[]
+  historyIndex:number
 }
