@@ -4,7 +4,18 @@ import { v4 as uuidv4 } from 'uuid'
 import { message } from 'ant-design-vue'
 import store from './index'
 import { insertAt } from '@/uitils/helper'
-import { ComponentData, EditorProps, GlobalDataProps } from '@/types'
+import {
+  pushHistory,
+  pushHistoryDebounce,
+  modifyHistory,
+} from '@/uitils/edtor'
+import {
+  ComponentData,
+  EditorProps,
+  GlobalDataProps,
+  HistoryProps,
+  UpdateComponentData,
+} from '@/types'
 import {
   textDefaultProps,
   imageDefaultProps,
@@ -12,6 +23,7 @@ import {
   PageProps,
 } from '@/uitils/defaultProps'
 export type MoveDirection = 'Up' | 'Down' | 'Left' | 'Right'
+
 const components: ComponentData[] = [
   {
     id: uuidv4(),
@@ -86,46 +98,88 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     },
     copiedComponent: undefined,
     histories: [],
-    historyIndex:-1,
+    historyIndex: -1,
+    cachedOldValues: null,
+    maxHistoryNumber: 10,
   },
   getters: {
     getCurrentElement(state) {
       return state.components.find((item) => state.currentElement === item.id)
+    },
+    checkUndoDisable: (state) => {
+      if (state.histories.length === 0 || state.historyIndex === 0) {
+        return true
+      }
+      return false
+    },
+    checkRedoDisable: (state) => {
+      if (
+        state.histories.length === 0 ||
+        state.historyIndex === state.histories.length ||
+        state.historyIndex === -1
+      ) {
+        return true
+      }
+      return false
     },
   },
   mutations: {
     setActive(state, id: string) {
       state.currentElement = id
     },
-    undo(state){
-      if(state.historyIndex === -1){
-        state.historyIndex = state.histories.length -1
-      }else{
-        state.historyIndex --
+    undo(state) {
+      if (state.historyIndex === -1) {
+        state.historyIndex = state.histories.length - 1
+      } else {
+        state.historyIndex--
       }
       const history = state.histories[state.historyIndex]
       switch (history.type) {
         case 'add':
-          state.components = state.components.filter(item=>item.id !== history.componentId)
-          break;
+          state.components = state.components.filter(
+            (item) => item.id !== history.componentId
+          )
+          break
         case 'delete':
-          state.components = insertAt(state.components,history.index as number, history.data)
+          state.components = insertAt(
+            state.components,
+            history.index as number,
+            history.data
+          )
         case 'modify':
-          const { componentId,data } = history
-          const { value,newValue,key } = data
-          const updateComponent = state.components.find(item=>item.id === componentId)
-          if(updateComponent){
-            updateComponent.props[key as keyof AllComponentProps] = value
-          }
-          break;
+          modifyHistory(state, history, 'undo')
+          break
         default:
-          break;
+          break
       }
+    },
+    redo(state) {
+      if (state.historyIndex === -1) {
+        return
+      }
+      const history = state.histories[state.historyIndex]
+      switch (history.type) {
+        case 'add':
+          state.components.push(history.data)
+          break
+        case 'delete':
+          state.components = state.components.filter(
+            (component) => component.id !== history.componentId
+          )
+          break
+        case 'modify': {
+          modifyHistory(state, history, 'redo')
+          break
+        }
+        default:
+          break
+      }
+      state.historyIndex++
     },
     addComponent(state, component: ComponentData) {
       component.layerName = '图层' + (state.components.length + 1)
       state.components.push(component)
-      state.histories.push({
+      pushHistory(state, {
         id: uuidv4(),
         componentId: component.id,
         type: 'add',
@@ -149,7 +203,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       clone.layerName = copiedComponent.layerName + '副本'
       state.components.push(clone)
       message.success('粘贴当前图层成功', 1)
-      state.histories.push({
+      pushHistory(state, {
         id: uuidv4(),
         componentId: clone.id,
         type: 'add',
@@ -163,7 +217,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           (item) => item.id === id
         )
         state.components = state.components.filter((item) => item.id !== id)
-        state.histories.push({
+        pushHistory(state, {
           id: uuidv4(),
           componentId: currentComponent.id,
           type: 'delete',
@@ -227,22 +281,29 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         }
       }
     },
-    updateComponent(state, { key, value, id, isRoot }) {
+    updateComponent(state, { key, value, id, isRoot }: UpdateComponentData) {
       const updateComponent = state.components.find(
         (item) => item.id === (id || state.currentElement)
       )
       if (updateComponent) {
         if (isRoot) {
-          (updateComponent as any)[key] = value
+          ;(updateComponent as any)[key as string] = value
         } else {
-          const oldValue = updateComponent.props[key as keyof AllComponentProps]
-          updateComponent.props[key as keyof AllComponentProps] = value
-          state.histories.push({
-            id: uuidv4(),
-            componentId: id || state.currentElement,
-            type: 'modify',
-            data: { oldValue, newValue: value, key },
-          })
+          const oldValue = Array.isArray(key)
+            ? key.map((key) => updateComponent.props[key])
+            : updateComponent.props[key]
+          if (!state.cachedOldValues) {
+            state.cachedOldValues = oldValue
+          }
+          pushHistoryDebounce(state, { key, value, id })
+          if (Array.isArray(key) && Array.isArray(value)) {
+            key.forEach(
+              (keyName, index) =>
+                (updateComponent.props[keyName] = value[index])
+            )
+          } else if (typeof key === 'string' && typeof value === 'string') {
+            updateComponent.props[key as keyof AllComponentProps] = value
+          }
         }
       }
     },

@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
-import { KeyHandler,HotkeysEvent } from 'hotkeys-js'
+import { KeyHandler, HotkeysEvent } from 'hotkeys-js'
 import useHotKey from '@/hooks/useHotKey'
 
 const wrap = (callback: KeyHandler) => {
@@ -28,28 +28,78 @@ export default function initHotKeys() {
   useHotKey('esc', () => {
     store.commit('setActive', '')
   })
-  useHotKey('up', wrap(() => {
-    store.commit('moveComponent', { direction: 'Up', amount: 1, id: currentId.value })
-  }))
-  useHotKey('down', wrap(() => {
-    store.commit('moveComponent', { direction: 'Down', amount: 1, id: currentId.value})
-  }))
-  useHotKey('left', wrap(() => {
-    store.commit('moveComponent', { direction: 'Left', amount: 1, id: currentId.value})
-  }))
-  useHotKey('right', wrap(() => {
-    store.commit('moveComponent', { direction: 'Right', amount: 1, id: currentId.value})
-  }))
+  useHotKey(
+    'up',
+    wrap(() => {
+      store.commit('moveComponent', {
+        direction: 'Up',
+        amount: 1,
+        id: currentId.value,
+      })
+    })
+  )
+  useHotKey(
+    'down',
+    wrap(() => {
+      store.commit('moveComponent', {
+        direction: 'Down',
+        amount: 1,
+        id: currentId.value,
+      })
+    })
+  )
+  useHotKey(
+    'left',
+    wrap(() => {
+      store.commit('moveComponent', {
+        direction: 'Left',
+        amount: 1,
+        id: currentId.value,
+      })
+    })
+  )
+  useHotKey(
+    'right',
+    wrap(() => {
+      store.commit('moveComponent', {
+        direction: 'Right',
+        amount: 1,
+        id: currentId.value,
+      })
+    })
+  )
   useHotKey('shift+up', () => {
-    store.commit('moveComponent', { direction: 'Up', amount: 10, id: currentId.value})
+    store.commit('moveComponent', {
+      direction: 'Up',
+      amount: 10,
+      id: currentId.value,
+    })
   })
   useHotKey('shift+down', () => {
-    store.commit('moveComponent', { direction: 'Down', amount: 10, id: currentId.value})
+    store.commit('moveComponent', {
+      direction: 'Down',
+      amount: 10,
+      id: currentId.value,
+    })
   })
   useHotKey('shift+left', () => {
-    store.commit('moveComponent', { direction: 'Left', amount: 10, id: currentId.value})
+    store.commit('moveComponent', {
+      direction: 'Left',
+      amount: 10,
+      id: currentId.value,
+    })
   })
   useHotKey('shift+right', () => {
-    store.commit('moveComponent', { direction: 'Right', amount: 10, id: currentId.value})
+    store.commit('moveComponent', {
+      direction: 'Right',
+      amount: 10,
+      id: currentId.value,
+    })
+  })
+  useHotKey('ctrl+z,command+z', () => {
+    store.commit('undo')
+  })
+  useHotKey('ctrl+shift+z,command+shift+z', () => {
+    store.commit('undo')
   })
 }

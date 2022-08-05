@@ -109,3 +109,16 @@ export function timeout(ms: number) {
 export const objToQueryString = (queryObj: { [key: string]: any }) => {
   return Object.keys(queryObj).map(key => `${key}=${queryObj[key]}`).join('&')
 }
+
+
+export const debounceChange = (callback: (...args: any) => void, timeout = 500) => {
+  let timer = 0
+  return (...args: any) => {
+    console.log(timer)
+    clearTimeout(timer)
+    timer = window.setTimeout(() => {
+      timer = 0
+      callback(...args)
+    }, timeout)
+  }
+}

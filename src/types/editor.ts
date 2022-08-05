@@ -31,4 +31,14 @@ export interface EditorProps {
   copiedComponent?: ComponentData
   histories:HistoryProps[]
   historyIndex:number
+  cachedOldValues: any;
+  maxHistoryNumber: number;
+}
+
+
+export interface UpdateComponentData {
+  key: keyof AllComponentProps | Array<keyof AllComponentProps>
+  value: string | string[]
+  id: string
+  isRoot?: boolean
 }

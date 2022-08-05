@@ -10,6 +10,7 @@ import EditWrapper from '@/components/EditWrapper.vue'
 import LayerList from '@/components/LayerList.vue'
 import EditorGroup from '@/components/EditorGroup.vue'
 import PropsTable from '@/components/PropsTable.vue'
+import HistoryArea from '@/views/editor/HistoryArea.vue'
 
 initHotKeys()
 
@@ -47,8 +48,12 @@ const handleChangePage = (e: any) => {
 const updatePosition = (data: { id: string; top: number; left: number }) => {
   const { id } = data
   const updatedData = pickBy<number>(data, (v, k) => k !== 'id')
-  forEach(updatedData, (v, key) => {
-    store.commit('updateComponent', { id, key, value: v + 'px' })
+  const keyArr = Object.keys(updatedData)
+  const valueArr = Object.values(updatedData)
+  store.commit('updateComponent', {
+    id,
+    key: keyArr,
+    value: valueArr.map((item) => item + 'px'),
   })
 }
 
@@ -62,6 +67,7 @@ if (!store.state.editor.currentElement) {
 // vscode 插件 使用Volar 更好的支持糖语法+ts 否则引入糖语法的组件会报错
 import LText from '@/components/LText.vue'
 import LImage from '@/components/LImage.vue'
+import { object } from 'vue-types'
 export default {
   components: {
     LText,
@@ -81,6 +87,7 @@ export default {
       <a-layout style="padding: 0 24px 24px">
         <a-layout-content class="preview-container">
           <p>画布区域</p>
+          <HistoryArea />
           <div class="preview-list" id="canvas-area">
             <div class="body-container" :style="page.props">
               <template v-for="component in components" :key="component.id">
