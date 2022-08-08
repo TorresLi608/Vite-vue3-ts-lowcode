@@ -106,14 +106,14 @@ export default {
           :style="{ lineHeight: '64px' }"
         >
           <a-menu-item key="1">
-            <a-button type="primary">预览和设置</a-button>
+            <a-button type="primary">预览</a-button>
           </a-menu-item>
           <a-menu-item key="2">
             <a-button type="primary">保存</a-button>
           </a-menu-item>
-          <a-menu-item key="3">
+          <!-- <a-menu-item key="3">
             <a-button type="primary">发布</a-button>
-          </a-menu-item>
+          </a-menu-item> -->
           <a-menu-item key="4">
             <user-profile :user="userInfo"></user-profile>
           </a-menu-item>
