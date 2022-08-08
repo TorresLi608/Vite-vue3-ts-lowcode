@@ -1,27 +1,32 @@
 <template>
   <uploader
     class="styled-uploader"
-    action="/utils/upload-img" 
+    action="/utils/upload-img"
     :showUploadList="false"
     :beforeUpload="commonUploadCheck"
-    @success="(data) => {handleUploadSuccess(data.resp, data.file.raw)}"
+    @success="
+      (data) => {
+        handleUploadSuccess(data.resp, data.file.raw)
+      }
+    "
+    @error="(data) => handleUploadError(data.error, data.file.raw)"
   >
     <div class="uploader-container">
       <FileImageOutlined />
-      <h4>{{text}}</h4>
+      <h4>{{ text }}</h4>
     </div>
     <template #loading>
       <div class="uploader-container">
-        <LoadingOutlined spin/>
+        <LoadingOutlined spin />
         <h4>上传中</h4>
       </div>
     </template>
     <template #uploaded="dataProps">
       <div class="uploader-container">
-        <img :src="dataProps.uploadedData.data.urls[0]" v-if="showUploaded">
+        <img :src="dataProps.uploadedData.data.urls[0]" v-if="showUploaded" />
         <template v-else>
           <FileImageOutlined />
-          <h4>{{text}}</h4>
+          <h4>{{ text }}</h4>
         </template>
       </div>
     </template>
@@ -49,14 +54,18 @@ export default defineComponent({
     FileImageOutlined,
     LoadingOutlined,
   },
-  emits: ['success'],
+  emits: ['success','error'],
   setup(props, { emit }) {
     const handleUploadSuccess = (resp: any, file: File) => {
       emit('success', { resp, file })
     }
+    const handleUploadError = (error:any,file:File)=>{
+      emit('error',{error,file})
+    }
     return {
       commonUploadCheck,
-      handleUploadSuccess
+      handleUploadSuccess,
+      handleUploadError
     }
   }
 })
@@ -89,5 +98,5 @@ export default defineComponent({
     height: 100%;
     object-fit: cover;
   }
-} 
+}
 </style>

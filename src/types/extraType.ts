@@ -5,3 +5,7 @@ export interface UploadResp {
     url: string;
   };
 }
+export interface UploadError{
+  error:any;
+  file:File;
+}

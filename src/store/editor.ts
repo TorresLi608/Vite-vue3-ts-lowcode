@@ -93,7 +93,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     components,
     currentElement: '',
     page: {
-      title: 'Test',
+      title: '页面标题',
       props: pageDefaultProps,
     },
     copiedComponent: undefined,

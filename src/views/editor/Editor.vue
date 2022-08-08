@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import { pickBy, forEach } from 'lodash-es'
-import { computed, ref,onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import initHotKeys from '@/plugins/hotkeys'
 import initContextMenu from '@/plugins/contextMenu'
 import { GlobalDataProps, ComponentData } from '@/types'
 import defaultTextTemplates from '@/uitils/defaultTemplates'
+import InlineEdit from '@/components/InlineEdit.vue'
+import UserProfile from '@/components/UserProfile.vue'
 import ComponentList from '@/components/ComponentList.vue'
+import ImageComponent from '@/components/ImageComponent.vue'
 import EditWrapper from '@/components/EditWrapper.vue'
 import LayerList from '@/components/LayerList.vue'
 import EditorGroup from '@/components/EditorGroup.vue'
@@ -15,7 +18,8 @@ import HistoryArea from '@/views/editor/HistoryArea.vue'
 
 initHotKeys()
 initContextMenu()
-const activeKey = ref('1')
+const activeKeyLeft = ref('1')
+const activeKeyRight = ref('1')
 const store = useStore<GlobalDataProps>()
 const components = computed(() => {
   return store.state.editor.components
@@ -27,6 +31,8 @@ const page = computed(() => {
 const currentElement = computed<ComponentData | null>(() => {
   return store.getters.getCurrentElement
 })
+
+const userInfo = computed(() => store.state.users)
 
 const defaultList = ref<any[]>(defaultTextTemplates)
 
@@ -46,6 +52,7 @@ const handleChangePage = (e: any) => {
   store.commit('updatePage', e)
 }
 
+
 const updatePosition = (data: { id: string; top: number; left: number }) => {
   const { id } = data
   const updatedData = pickBy<number>(data, (v, k) => k !== 'id')
@@ -58,10 +65,13 @@ const updatePosition = (data: { id: string; top: number; left: number }) => {
   })
 }
 
+const handleTitleChange = (newTitle: string) => {
+  store.commit('updatePage', { key: 'title', value: newTitle })
+}
+
 if (!store.state.editor.currentElement) {
   setActive(components.value[0].id)
 }
-
 </script>
 
 <script lang="ts">
@@ -69,7 +79,6 @@ if (!store.state.editor.currentElement) {
 // vscode 插件 使用Volar 更好的支持糖语法+ts 否则引入糖语法的组件会报错
 import LText from '@/components/LText.vue'
 import LImage from '@/components/LImage.vue'
-import { object } from 'vue-types'
 export default {
   components: {
     LText,
@@ -81,9 +90,48 @@ export default {
 <template>
   <div class="editor-container">
     <a-layout>
+      <a-layout-header class="header">
+        <div class="page-title">
+          <router-link to="/"> 灵动一搭 </router-link>
+          <inline-edit
+            v-if="page.title"
+            :value="page.title"
+            @change="handleTitleChange"
+          />
+        </div>
+        <a-menu
+          :selectable="false"
+          theme="dark"
+          mode="horizontal"
+          :style="{ lineHeight: '64px' }"
+        >
+          <a-menu-item key="1">
+            <a-button type="primary">预览和设置</a-button>
+          </a-menu-item>
+          <a-menu-item key="2">
+            <a-button type="primary">保存</a-button>
+          </a-menu-item>
+          <a-menu-item key="3">
+            <a-button type="primary">发布</a-button>
+          </a-menu-item>
+          <a-menu-item key="4">
+            <user-profile :user="userInfo"></user-profile>
+          </a-menu-item>
+        </a-menu>
+      </a-layout-header>
+    </a-layout>
+    <a-layout>
       <a-layout-sider width="300" style="background: #fff">
         <div class="sidebar-container">
-          <ComponentList :list="defaultList" @onItemClick="onItemClick" />
+          <a-tabs v-model:activeKey="activeKeyLeft" centered>
+            <a-tab-pane key="1" tab="文本组件">
+              <ComponentList :list="defaultList" @onItemClick="onItemClick" />
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="图片组件">
+              <ImageComponent @on-item-click="onItemClick"/>
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="图表组件"> 后续开发。。。 </a-tab-pane>
+          </a-tabs>
         </div>
       </a-layout-sider>
       <a-layout style="padding: 0 24px 24px">
@@ -113,7 +161,7 @@ export default {
         style="background: #fff"
         class="settings-panel"
       >
-        <a-tabs v-model:activeKey="activeKey" centered>
+        <a-tabs v-model:activeKey="activeKeyRight" centered>
           <a-tab-pane key="1" tab="属性设置">
             <template v-if="currentElement?.props">
               <EditorGroup
@@ -149,6 +197,12 @@ export default {
 </template>
 
 <style lang="less" scoped>
+.editor-container .sidebar-container {
+  .ant-tabs-tabpane{
+    display: flex;
+    justify-content: center;
+  }
+}
 .editor-container .preview-container {
   padding: 24px;
   margin: 0;
@@ -174,10 +228,12 @@ export default {
 .page-title {
   display: flex;
 }
-.page-title .inline-edit span {
-  font-weight: 500;
+.page-title :deep(.inline-edit) {
   margin-left: 10px;
-  font-size: 16px;
+  span {
+    font-weight: 500;
+    font-size: 16px;
+  }
 }
 .preview-list.canvas-fix .edit-wrapper > * {
   box-shadow: none !important;
