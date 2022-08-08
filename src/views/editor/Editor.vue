@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { pickBy, forEach } from 'lodash-es'
-import { computed, ref } from 'vue'
+import { computed, ref,onMounted } from 'vue'
 import { useStore } from 'vuex'
 import initHotKeys from '@/plugins/hotkeys'
+import initContextMenu from '@/plugins/contextMenu'
 import { GlobalDataProps, ComponentData } from '@/types'
 import defaultTextTemplates from '@/uitils/defaultTemplates'
 import ComponentList from '@/components/ComponentList.vue'
@@ -13,7 +14,7 @@ import PropsTable from '@/components/PropsTable.vue'
 import HistoryArea from '@/views/editor/HistoryArea.vue'
 
 initHotKeys()
-
+initContextMenu()
 const activeKey = ref('1')
 const store = useStore<GlobalDataProps>()
 const components = computed(() => {
@@ -60,6 +61,7 @@ const updatePosition = (data: { id: string; top: number; left: number }) => {
 if (!store.state.editor.currentElement) {
   setActive(components.value[0].id)
 }
+
 </script>
 
 <script lang="ts">

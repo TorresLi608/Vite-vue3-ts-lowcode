@@ -113,8 +113,7 @@ export const objToQueryString = (queryObj: { [key: string]: any }) => {
 
 export const debounceChange = (callback: (...args: any) => void, timeout = 500) => {
   let timer = 0
-  return (...args: any) => {
-    console.log(timer)
+  return (...args: any) => {   
     clearTimeout(timer)
     timer = window.setTimeout(() => {
       timer = 0
