@@ -3,15 +3,15 @@ import html2canvas from 'html2canvas'
 import axios from 'axios'
 import { RespUploadData } from '@/types/extraType'
 interface CheckCondition {
-  format?: string[];
+  format?: string[]
   // 使用多少 M 为单位
-  size?: number;
+  size?: number
 }
 type ErrorType = 'size' | 'format' | null
-export function beforeUploadCheck (file: File, condition: CheckCondition) {
+export function beforeUploadCheck(file: File, condition: CheckCondition) {
   const { format, size } = condition
   const isValidFormat = format ? format.includes(file.type) : true
-  const isValidSize = size ? (file.size / 1024 / 1024 < size) : true
+  const isValidSize = size ? file.size / 1024 / 1024 < size : true
   let error: ErrorType = null
   if (!isValidFormat) {
     error = 'format'
@@ -21,12 +21,15 @@ export function beforeUploadCheck (file: File, condition: CheckCondition) {
   }
   return {
     passed: isValidFormat && isValidSize,
-    error
+    error,
   }
 }
 
 export const commonUploadCheck = (file: File) => {
-  const result = beforeUploadCheck(file, { format: ['image/jpeg', 'image/png'], size: 1 })
+  const result = beforeUploadCheck(file, {
+    format: ['image/jpeg', 'image/png'],
+    size: 1,
+  })
   const { passed, error } = result
   if (error === 'format') {
     message.error('上传图片只能是 JPG/PNG 格式!')
@@ -63,18 +66,12 @@ export const getParentElement = (element: HTMLElement, className: string) => {
 }
 
 export const insertAt = (arr: any[], index: number, newItem: any) => {
-  return [
-    ...arr.slice(0, index),
-    newItem,
-    ...arr.slice(index)
-  ]
+  return [...arr.slice(0, index), newItem, ...arr.slice(index)]
 }
 
-export function isMobile (mobile: string) {
+export function isMobile(mobile: string) {
   return /^1[3-9]\d{9}$/.test(mobile)
 }
-
-
 
 export function copyToClipboard(text: string) {
   // create a fake textarea, set value to text
@@ -98,17 +95,21 @@ export function copyToClipboard(text: string) {
 }
 
 export function timeout(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 export const objToQueryString = (queryObj: { [key: string]: any }) => {
-  return Object.keys(queryObj).map(key => `${key}=${queryObj[key]}`).join('&')
+  return Object.keys(queryObj)
+    .map((key) => `${key}=${queryObj[key]}`)
+    .join('&')
 }
 
-
-export const debounceChange = (callback: (...args: any) => void, timeout = 500) => {
+export const debounceChange = (
+  callback: (...args: any) => void,
+  timeout = 500
+) => {
   let timer = 0
-  return (...args: any) => {   
+  return (...args: any) => {
     clearTimeout(timer)
     timer = window.setTimeout(() => {
       timer = 0
@@ -117,20 +118,30 @@ export const debounceChange = (callback: (...args: any) => void, timeout = 500) 
   }
 }
 
-export async function uploadFile<R = any>(file: Blob, url = "/utils/upload-img", fileName ='screenshot.png') {
+export async function uploadFile<R = any>(
+  file: Blob,
+  url = '/utils/upload-img',
+  fileName = 'screenshot.png'
+) {
   const newFile = file instanceof File ? file : new File([file], fileName)
   const formData = new FormData()
   formData.append(newFile.name, newFile)
-  const { data } = await axios.post<R>(url, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
-  return data
+  try {
+    const { data } = await axios.post<R>(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return data
+  } catch (error) {
+    message.error('上传失败')
+    return false
+  }
 }
+
 function getCanvasBlob(canvas: HTMLCanvasElement) {
-  return new Promise<Blob | null>(resolve => {
-    canvas.toBlob(blob => {
+  return new Promise<Blob | null>((resolve) => {
+    canvas.toBlob((blob) => {
       resolve(blob)
     })
   })

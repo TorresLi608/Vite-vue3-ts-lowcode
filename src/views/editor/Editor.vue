@@ -199,7 +199,9 @@ const publish = async () => {
   // 2.生成图片并上传
   // const resp = takeScreenshotAndUpload(el)
   // canvasFix.value = false
-  // console.log(resp,'resp')
+  // if(resp){
+  //    console.log(resp,'resp')
+  // }
 }
 
 if (!store.state.editor.currentElement && components.value.length) {
