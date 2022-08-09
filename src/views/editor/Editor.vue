@@ -1,92 +1,3 @@
-<script lang="ts" setup>
-import { pickBy, forEach } from 'lodash-es'
-import { computed, ref, onMounted } from 'vue'
-import { useStore } from 'vuex'
-import initHotKeys from '@/plugins/hotkeys'
-import initContextMenu from '@/plugins/contextMenu'
-import { GlobalDataProps, ComponentData } from '@/types'
-import defaultTextTemplates from '@/uitils/defaultTemplates'
-import InlineEdit from '@/components/InlineEdit.vue'
-import UserProfile from '@/components/UserProfile.vue'
-import ComponentList from '@/components/ComponentList.vue'
-import ImageComponent from '@/components/ImageComponent.vue'
-import EditWrapper from '@/components/EditWrapper.vue'
-import LayerList from '@/components/LayerList.vue'
-import EditorGroup from '@/components/EditorGroup.vue'
-import PropsTable from '@/components/PropsTable.vue'
-import HistoryArea from '@/views/editor/HistoryArea.vue'
-
-initHotKeys()
-initContextMenu()
-const activeKeyLeft = ref('1')
-const activeKeyRight = ref('1')
-const store = useStore<GlobalDataProps>()
-const components = computed(() => {
-  return store.state.editor.components
-})
-
-const page = computed(() => {
-  return store.state.editor.page
-})
-const currentElement = computed<ComponentData | null>(() => {
-  return store.getters.getCurrentElement
-})
-
-const userInfo = computed(() => store.state.users)
-
-const defaultList = ref<any[]>(defaultTextTemplates)
-
-const onItemClick = (item: ComponentData) => {
-  store.commit('addComponent', item)
-}
-
-const setActive = (id: string) => {
-  store.commit('setActive', id)
-}
-
-const handleChange = (e: any) => {
-  store.commit('updateComponent', e)
-}
-
-const handleChangePage = (e: any) => {
-  store.commit('updatePage', e)
-}
-
-
-const updatePosition = (data: { id: string; top: number; left: number }) => {
-  const { id } = data
-  const updatedData = pickBy<number>(data, (v, k) => k !== 'id')
-  const keyArr = Object.keys(updatedData)
-  const valueArr = Object.values(updatedData)
-  store.commit('updateComponent', {
-    id,
-    key: keyArr,
-    value: valueArr.map((item) => item + 'px'),
-  })
-}
-
-const handleTitleChange = (newTitle: string) => {
-  store.commit('updatePage', { key: 'title', value: newTitle })
-}
-
-if (!store.state.editor.currentElement) {
-  setActive(components.value[0].id)
-}
-</script>
-
-<script lang="ts">
-// 如果使用setUp糖语法 必须要手动注册一次组件 compontent 才会生效
-// vscode 插件 使用Volar 更好的支持糖语法+ts 否则引入糖语法的组件会报错
-import LText from '@/components/LText.vue'
-import LImage from '@/components/LImage.vue'
-export default {
-  components: {
-    LText,
-    LImage,
-  },
-}
-</script>
-
 <template>
   <div class="editor-container">
     <a-layout>
@@ -106,7 +17,7 @@ export default {
           :style="{ lineHeight: '64px' }"
         >
           <a-menu-item key="1">
-            <a-button type="primary">预览</a-button>
+            <a-button type="primary" @click="publish">预览</a-button>
           </a-menu-item>
           <a-menu-item key="2">
             <a-button type="primary">保存</a-button>
@@ -126,9 +37,10 @@ export default {
           <a-tabs v-model:activeKey="activeKeyLeft" centered>
             <a-tab-pane key="1" tab="文本组件">
               <ComponentList :list="defaultList" @onItemClick="onItemClick" />
+              <img id="test-image" :style="{ width: '300px' }" />
             </a-tab-pane>
             <a-tab-pane key="2" tab="图片组件">
-              <ImageComponent @on-item-click="onItemClick"/>
+              <ImageComponent @on-item-click="onItemClick" />
             </a-tab-pane>
             <a-tab-pane key="3" tab="图表组件"> 后续开发。。。 </a-tab-pane>
           </a-tabs>
@@ -138,7 +50,11 @@ export default {
         <a-layout-content class="preview-container">
           <p>画布区域</p>
           <HistoryArea />
-          <div class="preview-list" id="canvas-area">
+          <div
+            class="preview-list"
+            id="canvas-area"
+            :class="{ 'canvas-fix': canvasFix }"
+          >
             <div class="body-container" :style="page.props">
               <template v-for="component in components" :key="component.id">
                 <EditWrapper
@@ -196,12 +112,120 @@ export default {
   </div>
 </template>
 
+<script lang="ts" setup>
+import { pickBy, forEach } from 'lodash-es'
+import { computed, ref, onMounted, nextTick } from 'vue'
+import { useStore } from 'vuex'
+import html2canvas from 'html2canvas'
+import initHotKeys from '@/plugins/hotkeys'
+import initContextMenu from '@/plugins/contextMenu'
+import { takeScreenshotAndUpload } from '@/uitils/helper'
+import { GlobalDataProps, ComponentData } from '@/types'
+import defaultTextTemplates from '@/uitils/defaultTemplates'
+import InlineEdit from '@/components/InlineEdit.vue'
+import UserProfile from '@/components/UserProfile.vue'
+import ComponentList from '@/components/ComponentList.vue'
+import ImageComponent from '@/components/ImageComponent.vue'
+import EditWrapper from '@/components/EditWrapper.vue'
+import LayerList from '@/components/LayerList.vue'
+import EditorGroup from '@/components/EditorGroup.vue'
+import PropsTable from '@/components/PropsTable.vue'
+import HistoryArea from '@/views/editor/HistoryArea.vue'
+
+initHotKeys()
+initContextMenu()
+const activeKeyLeft = ref('1')
+const activeKeyRight = ref('1')
+const canvasFix = ref(false)
+const defaultList = ref(defaultTextTemplates)
+const store = useStore<GlobalDataProps>()
+const components = computed(() => {
+  return store.state.editor.components
+})
+
+const page = computed(() => {
+  return store.state.editor.page
+})
+const currentElement = computed<ComponentData | null>(() => {
+  return store.getters.getCurrentElement
+})
+
+const userInfo = computed(() => store.state.users)
+
+const onItemClick = (item: ComponentData) => {
+  store.commit('addComponent', item)
+}
+
+const setActive = (id: string) => {
+  store.commit('setActive', id)
+}
+
+const handleChange = (e: any) => {
+  store.commit('updateComponent', e)
+}
+
+const handleChangePage = (e: any) => {
+  store.commit('updatePage', e)
+}
+
+const updatePosition = (data: { id: string; top: number; left: number }) => {
+  const { id } = data
+  const updatedData = pickBy<number>(data, (v, k) => k !== 'id')
+  const keyArr = Object.keys(updatedData)
+  const valueArr = Object.values(updatedData)
+  store.commit('updateComponent', {
+    id,
+    key: keyArr,
+    value: valueArr.map((item) => item + 'px'),
+  })
+}
+
+const handleTitleChange = (newTitle: string) => {
+  store.commit('updatePage', { key: 'title', value: newTitle })
+}
+
+const publish = async () => {
+  setActive('')
+  const el = document.getElementById('canvas-area') as HTMLElement
+  canvasFix.value = true
+  await nextTick()
+  // 1.生成图片在本地
+  // 解决资源跨域问题
+  html2canvas(el, { width: 375, useCORS: true, scale: 1 }).then((canvas) => {
+    const image = document.getElementById('test-image') as HTMLImageElement
+    image.src = canvas.toDataURL()
+    canvasFix.value = false
+  })
+  // 2.生成图片并上传
+  // const resp = takeScreenshotAndUpload(el)
+  // canvasFix.value = false
+  // console.log(resp,'resp')
+}
+
+if (!store.state.editor.currentElement && components.value.length) {
+  setActive(components.value[0].id)
+}
+</script>
+
+<script lang="ts">
+// 如果使用setUp糖语法 必须要手动注册一次组件 compontent 才会生效
+// vscode 插件 使用Volar 更好的支持糖语法+ts 否则引入糖语法的组件会报错
+import LText from '@/components/LText.vue'
+import LImage from '@/components/LImage.vue'
+export default {
+  components: {
+    LText,
+    LImage,
+  },
+}
+</script>
+
 <style lang="less" scoped>
 .editor-container .sidebar-container {
-  .ant-tabs-tabpane{
-    display: flex;
-    justify-content: center;
-  }
+  // .ant-tabs-tabpane{
+  //   display: flex;
+  //   justify-content: center;
+  // }
 }
 .editor-container .preview-container {
   padding: 24px;
@@ -235,9 +259,11 @@ export default {
     font-size: 16px;
   }
 }
+// Canvas不支持box-shadow属性 所以保存图片的时候去掉该属性
 .preview-list.canvas-fix .edit-wrapper > * {
   box-shadow: none !important;
 }
+// 解决1倍图时高度只有一半问题
 .preview-list.canvas-fix {
   position: absolute;
   max-height: none;
