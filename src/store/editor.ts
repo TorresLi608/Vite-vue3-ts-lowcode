@@ -87,20 +87,25 @@ const pageDefaultProps = {
   backgroundSize: 'cover',
   height: '560px',
 }
+const editorVuex = localStorage.getItem('editor-vuex')
+const defaultState:EditorProps = editorVuex ? JSON.parse(editorVuex) : {
+  components,
+  currentElement: '',
+  page: {
+    title: '页面标题',
+    props: pageDefaultProps,
+  },
+  copiedComponent: undefined,
+  histories: [],
+  historyIndex: -1,
+  cachedOldValues: null,
+  maxHistoryNumber: 10,
+}
+
 
 const editor: Module<EditorProps, GlobalDataProps> = {
   state: {
-    components,
-    currentElement: '',
-    page: {
-      title: '页面标题',
-      props: pageDefaultProps,
-    },
-    copiedComponent: undefined,
-    histories: [],
-    historyIndex: -1,
-    cachedOldValues: null,
-    maxHistoryNumber: 10,
+   ...defaultState
   },
   getters: {
     getCurrentElement(state) {

@@ -17,14 +17,18 @@
           :style="{ lineHeight: '64px' }"
         >
           <a-menu-item key="1">
-            <a-button type="primary" @click="publish">预览</a-button>
+            <a-button type="primary" @click="handleClickPrevewPage"
+              >预览页面</a-button
+            >
           </a-menu-item>
           <a-menu-item key="2">
+            <a-button type="primary" @click="handleClickPrevew"
+              >预览图片</a-button
+            >
+          </a-menu-item>
+          <a-menu-item key="3">
             <a-button type="primary">保存</a-button>
           </a-menu-item>
-          <!-- <a-menu-item key="3">
-            <a-button type="primary">发布</a-button>
-          </a-menu-item> -->
           <a-menu-item key="4">
             <user-profile :user="userInfo"></user-profile>
           </a-menu-item>
@@ -110,12 +114,17 @@
       </a-layout-sider>
     </a-layout>
   </div>
+  <PreviewEditorImage
+    v-model:visible="isPreviewEditorImage"
+    :src="previewSrc"
+  />
 </template>
 
 <script lang="ts" setup>
 import { pickBy, forEach } from 'lodash-es'
-import { computed, ref, onMounted, nextTick } from 'vue'
+import { provide,computed, ref, onMounted, nextTick } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute,useRouter } from 'vue-router'
 import html2canvas from 'html2canvas'
 import initHotKeys from '@/plugins/hotkeys'
 import initContextMenu from '@/plugins/contextMenu'
@@ -130,15 +139,22 @@ import EditWrapper from '@/components/EditWrapper.vue'
 import LayerList from '@/components/LayerList.vue'
 import EditorGroup from '@/components/EditorGroup.vue'
 import PropsTable from '@/components/PropsTable.vue'
+import PreviewEditorImage from '@/components/PreviewEditorImage.vue'
 import HistoryArea from '@/views/editor/HistoryArea.vue'
 
+provide('isEditor',true);
 initHotKeys()
 initContextMenu()
 const activeKeyLeft = ref('1')
 const activeKeyRight = ref('1')
 const canvasFix = ref(false)
+const isPreviewEditorImage = ref(false)
+const previewSrc = ref('')
 const defaultList = ref(defaultTextTemplates)
 const store = useStore<GlobalDataProps>()
+const route = useRoute();
+const router = useRouter();
+const currentTemplateId = route.params.id as string
 const components = computed(() => {
   return store.state.editor.components
 })
@@ -184,7 +200,7 @@ const handleTitleChange = (newTitle: string) => {
   store.commit('updatePage', { key: 'title', value: newTitle })
 }
 
-const publish = async () => {
+const generateImages = async () => {
   setActive('')
   const el = document.getElementById('canvas-area') as HTMLElement
   canvasFix.value = true
@@ -192,16 +208,33 @@ const publish = async () => {
   // 1.生成图片在本地
   // 解决资源跨域问题
   html2canvas(el, { width: 375, useCORS: true, scale: 1 }).then((canvas) => {
-    const image = document.getElementById('test-image') as HTMLImageElement
-    image.src = canvas.toDataURL()
+    previewSrc.value = canvas.toDataURL()
     canvasFix.value = false
   })
   // 2.生成图片并上传
   // const resp = takeScreenshotAndUpload(el)
   // canvasFix.value = false
   // if(resp){
+  // previewSrc.value = resp.data.url
   //    console.log(resp,'resp')
   // }
+}
+
+const handleClickPrevew = () => {
+  isPreviewEditorImage.value = true
+  generateImages()
+}
+
+const handleClickPrevewPage = () => {
+  const newRuterPage = router.resolve({
+        name:'preview',  // 跳转的页面路由
+        params: { // 要传的参数
+          id: currentTemplateId
+        }
+  })
+  if(newRuterPage){
+    window.open(newRuterPage.href, '_blank') // 打开新的窗口(跳转路径，跳转类型)
+  }
 }
 
 if (!store.state.editor.currentElement && components.value.length) {

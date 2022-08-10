@@ -29,7 +29,7 @@
           <canvas id="barcode-container"></canvas>
         </div>
         <div class="use-button">
-          <router-link to="/editor">
+          <router-link :to="{ name: 'editor', params: { id: currentTemplateId }}">
             <a-button type="primary" size="large"> 使用模版 </a-button>
           </router-link>
           <a-button size="large"> 下载图片海报 </a-button>

@@ -24,10 +24,16 @@ const routes = [
     ],
   },
   {
-    path: '/editor',
+    path: '/editor/:id',
     name: 'editor',
     component: () => import('@/views/editor/Editor.vue'),
   },
+  {
+    path:'/editor/preview/:id',
+    name:"preview",
+    meta:{ title:'作品预览' },
+    component:() => import('@/views/editor/PreviewEditorPage.vue')
+  }
 ]
 
 const router = createRouter({
