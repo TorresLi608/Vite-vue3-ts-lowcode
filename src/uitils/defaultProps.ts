@@ -25,6 +25,7 @@ export interface CommonComponentProps {
   left: string
   top: string
   right: string
+  wordWrap:string
 }
 export const commonDefaultProps: CommonComponentProps = {
   // actions
@@ -50,6 +51,7 @@ export const commonDefaultProps: CommonComponentProps = {
   left: '0',
   top: '0',
   right: '0',
+  wordWrap: 'break-word',
 }
 export interface TextComponentProps extends CommonComponentProps {
   text: string

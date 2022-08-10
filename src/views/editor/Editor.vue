@@ -223,12 +223,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.editor-container .sidebar-container {
-  // .ant-tabs-tabpane{
-  //   display: flex;
-  //   justify-content: center;
-  // }
-}
 .editor-container .preview-container {
   padding: 24px;
   margin: 0;

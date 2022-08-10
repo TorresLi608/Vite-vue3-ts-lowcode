@@ -301,7 +301,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
               (keyName, index) =>
                 (updateComponent.props[keyName] = value[index])
             )
-          } else if (typeof key === 'string' && typeof value === 'string') {
+          } else if (typeof key === 'string' && (typeof value === 'string' || typeof value === 'number')) {
             updateComponent.props[key as keyof AllComponentProps] = value
           }
         }
