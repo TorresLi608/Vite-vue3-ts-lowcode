@@ -86,7 +86,7 @@
             <template v-if="currentElement?.props">
               <EditorGroup
                 v-if="!currentElement.isLocked"
-                :props="currentElement?.props"
+                :props="((currentElement?.props) as any)"
                 @change="handleChange"
               />
               <a-empty v-else>
