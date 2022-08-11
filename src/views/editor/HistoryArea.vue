@@ -4,7 +4,7 @@
       <a-button shape="circle" @click="handleToGitHub">
         <template #icon><GithubOutlined /> </template>
       </a-button>
-      <a-popover title="键盘操作" trigger="hover">
+      <a-popover title="键盘操作/双击元素" trigger="hover">
         <template #content>
           <ul class="ant-menu-light ant-menu-root ant-menu ant-menu-vertical">
             <li

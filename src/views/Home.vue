@@ -10,13 +10,22 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed,onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/types'
 import TemplateList from '@/components/TemplateList.vue'
 const store = useStore<GlobalDataProps>();
 const templateData = computed(()=>{
   return store.state.templates.data
+})
+onMounted(()=>{
+  window.addEventListener('scroll',()=>{
+    const totalPageHeight = document.body.scrollHeight
+    const scrollPoint = window.scrollY + window.innerHeight
+    if (scrollPoint >= totalPageHeight-10) {
+      console.log('???')
+      }
+    })
 })
 
 </script>
