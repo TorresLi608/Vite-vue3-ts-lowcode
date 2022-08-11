@@ -2,6 +2,7 @@ import { message } from 'ant-design-vue'
 import html2canvas from 'html2canvas'
 import axios from 'axios'
 import { RespUploadData } from '@/types/extraType'
+import QRCode from 'qrcode'
 interface CheckCondition {
   format?: string[]
   // 使用多少 M 为单位
@@ -153,4 +154,9 @@ export async function takeScreenshotAndUpload(ele: HTMLElement) {
     const data = await uploadFile<RespUploadData>(canvasBlob)
     return data
   }
+}
+
+export function generateQRCode(id: string, url: string, width = 100) {
+  const ele = document.getElementById(id) as HTMLCanvasElement
+  return QRCode.toCanvas(ele, url, { width, margin: 0 })
 }

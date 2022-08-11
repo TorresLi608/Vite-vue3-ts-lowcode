@@ -27,7 +27,7 @@
             >
           </a-menu-item>
           <a-menu-item key="3">
-            <a-button type="primary">保存</a-button>
+            <a-button type="primary" @click="handleSave">保存</a-button>
           </a-menu-item>
           <a-menu-item key="4">
             <user-profile :user="userInfo"></user-profile>
@@ -122,9 +122,9 @@
 
 <script lang="ts" setup>
 import { pickBy, forEach } from 'lodash-es'
-import { provide,computed, ref, onMounted, nextTick } from 'vue'
+import { provide, computed, ref, onMounted, nextTick } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute,useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import html2canvas from 'html2canvas'
 import initHotKeys from '@/plugins/hotkeys'
 import initContextMenu from '@/plugins/contextMenu'
@@ -142,7 +142,7 @@ import PropsTable from '@/components/PropsTable.vue'
 import PreviewEditorImage from '@/components/PreviewEditorImage.vue'
 import HistoryArea from '@/views/editor/HistoryArea.vue'
 
-provide('isEditor',true);
+provide('isEditor', true)
 initHotKeys()
 initContextMenu()
 const activeKeyLeft = ref('1')
@@ -152,8 +152,8 @@ const isPreviewEditorImage = ref(false)
 const previewSrc = ref('')
 const defaultList = ref(defaultTextTemplates)
 const store = useStore<GlobalDataProps>()
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 const currentTemplateId = route.params.id as string
 const components = computed(() => {
   return store.state.editor.components
@@ -219,6 +219,9 @@ const generateImages = async () => {
   //    console.log(resp,'resp')
   // }
 }
+const handleSave = () => {
+  console.log('保存。。。')
+}
 
 const handleClickPrevew = () => {
   isPreviewEditorImage.value = true
@@ -227,12 +230,13 @@ const handleClickPrevew = () => {
 
 const handleClickPrevewPage = () => {
   const newRuterPage = router.resolve({
-        name:'preview',  // 跳转的页面路由
-        params: { // 要传的参数
-          id: currentTemplateId
-        }
+    name: 'preview', // 跳转的页面路由
+    params: {
+      // 要传的参数
+      id: currentTemplateId,
+    },
   })
-  if(newRuterPage){
+  if (newRuterPage) {
     window.open(newRuterPage.href, '_blank') // 打开新的窗口(跳转路径，跳转类型)
   }
 }

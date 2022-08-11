@@ -16,9 +16,6 @@ import UserProfile from '@/components/UserProfile.vue'
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
-    <a-layout-footer>
-      tiger608@qq.com 开源
-    </a-layout-footer>
   </div>
 </template>
 

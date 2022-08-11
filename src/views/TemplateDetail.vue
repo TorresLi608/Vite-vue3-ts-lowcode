@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-  import { computed } from 'vue'
+  import { computed,onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import { useStore } from 'vuex'
   import { GlobalDataProps,TemplateProps} from '@/types'
+  import { generateQRCode } from '@/uitils/helper'
   
   const route = useRoute();
   const store = useStore<GlobalDataProps>()
@@ -10,6 +11,10 @@
   const template = computed<TemplateProps>(()=>{
     return store.getters.getTemplateById(parseInt(currentTemplateId))
   })
+  onMounted(()=>{
+    generateQRCode('barcode-container',`${window.location.origin}/editor/preview/${currentTemplateId}`,200)
+  })
+
 </script>
 <template>
   <div class="work-detail-container">
