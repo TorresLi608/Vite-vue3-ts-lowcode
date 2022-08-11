@@ -20,12 +20,12 @@
             </a-card-meta>
           </a-card>
           <div class="tag-list">
-            <a-tag color="red">
+            <a-tag color="red" v-if="item.isHot">
               HOT
             </a-tag>
-            <!-- <a-tag color="green" v-if="item.isNew">
+            <a-tag color="green" v-if="item.isNew">
               NEW
-            </a-tag> -->
+            </a-tag>
           </div>
         </router-link>
       </a-col>

@@ -27,7 +27,7 @@
             >
           </a-menu-item>
           <a-menu-item key="3">
-            <a-button type="primary" @click="handleSave">保存</a-button>
+            <a-button type="primary" @click="handleClickSave">保存</a-button>
           </a-menu-item>
           <a-menu-item key="4">
             <user-profile :user="userInfo"></user-profile>
@@ -117,6 +117,7 @@
   <PreviewEditorImage
     v-model:visible="isPreviewEditorImage"
     :src="previewSrc"
+    :page="page"
   />
 </template>
 
@@ -219,7 +220,8 @@ const generateImages = async () => {
   //    console.log(resp,'resp')
   // }
 }
-const handleSave = () => {
+const handleClickSave = () => {
+  window.localStorage.setItem('editor-vuex', JSON.stringify(store.state.editor))
   console.log('保存。。。')
 }
 
@@ -240,8 +242,7 @@ const handleClickPrevewPage = () => {
     window.open(newRuterPage.href, '_blank') // 打开新的窗口(跳转路径，跳转类型)
   }
 }
-
-if (!store.state.editor.currentElement && components.value.length) {
+if (components.value.length) {
   setActive(components.value[0].id)
 }
 </script>

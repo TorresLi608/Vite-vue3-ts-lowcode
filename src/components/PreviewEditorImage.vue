@@ -6,7 +6,9 @@
     </a-modal>
 </template>
 <script lang="ts" setup>
-import { defineProps,defineEmits } from 'vue'
+import { defineProps,defineEmits,PropType } from 'vue'
+import { downloadImage } from '@/uitils/helper'
+import { PageData } from '@/types'
 const props = defineProps({
   visible:{
     type:Boolean,
@@ -15,10 +17,15 @@ const props = defineProps({
   src:{
     type:String,
     default:''
+  },
+  page:{
+    type:Object as PropType<PageData>,
+    default:()=>({})
   }
 })
 const emit = defineEmits(['update:visible'])
 const handleOk = ()=>{
+  downloadImage(props.src,props.page.title)
   emit('update:visible',false)
 }
 

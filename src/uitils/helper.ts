@@ -1,8 +1,9 @@
 import { message } from 'ant-design-vue'
 import html2canvas from 'html2canvas'
+import QRCode from 'qrcode'
+import { saveAs } from 'file-saver'
 import axios from 'axios'
 import { RespUploadData } from '@/types/extraType'
-import QRCode from 'qrcode'
 interface CheckCondition {
   format?: string[]
   // 使用多少 M 为单位
@@ -68,10 +69,6 @@ export const getParentElement = (element: HTMLElement, className: string) => {
 
 export const insertAt = (arr: any[], index: number, newItem: any) => {
   return [...arr.slice(0, index), newItem, ...arr.slice(index)]
-}
-
-export function isMobile(mobile: string) {
-  return /^1[3-9]\d{9}$/.test(mobile)
 }
 
 export function copyToClipboard(text: string) {
@@ -159,4 +156,38 @@ export async function takeScreenshotAndUpload(ele: HTMLElement) {
 export function generateQRCode(id: string, url: string, width = 100) {
   const ele = document.getElementById(id) as HTMLCanvasElement
   return QRCode.toCanvas(ele, url, { width, margin: 0 })
+}
+
+export function downloadFile(src: string, fileName = 'default') {
+  const link = document.createElement('a')
+  link.download = fileName
+  link.rel = 'noopener'
+  // 判断文件是否跨域
+  if (link.origin !== location.origin) {
+    axios
+      .get(src, { responseType: 'blob' })
+      .then((data) => {
+        // 返回二进制文件
+        link.href = URL.createObjectURL(data.data)
+        setTimeout(() => {
+          link.dispatchEvent(new MouseEvent('click'))
+        })
+        // 释放URL.createObjectURL 缓存
+        setTimeout(() => {
+          URL.revokeObjectURL(link.href)
+        }, 10000)
+      })
+      .catch(() => {
+        link.target = '_blank'
+        link.href = src
+        link.dispatchEvent(new MouseEvent('click'))
+      })
+  } else {
+    link.href = src
+    link.dispatchEvent(new MouseEvent('click'))
+  }
+}
+
+export function downloadImage(src: string, fileName = 'default') {
+  saveAs(src, fileName)
 }

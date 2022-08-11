@@ -5,6 +5,8 @@ export interface TemplateProps  {
   title:string,
   desc:string,
   numberCount?:number,
+  isHot?:boolean
+  isNew?:boolean
 }
 
 export interface TemplatesProps  {

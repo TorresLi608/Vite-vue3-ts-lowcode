@@ -3,7 +3,7 @@
   import { useRoute } from 'vue-router'
   import { useStore } from 'vuex'
   import { GlobalDataProps,TemplateProps} from '@/types'
-  import { generateQRCode } from '@/uitils/helper'
+  import { generateQRCode,downloadImage } from '@/uitils/helper'
   
   const route = useRoute();
   const store = useStore<GlobalDataProps>()
@@ -11,8 +11,11 @@
   const template = computed<TemplateProps>(()=>{
     return store.getters.getTemplateById(parseInt(currentTemplateId))
   })
+  const handleDownLoadImage = ()=>{
+    downloadImage(template.value.coverImg,template.value.title)
+  }
   onMounted(()=>{
-    generateQRCode('barcode-container',`${window.location.origin}/editor/preview/${currentTemplateId}`,200)
+    generateQRCode('barcode-container',`${window.location.origin}/editor/preview/${currentTemplateId}`,150)
   })
 
 </script>
@@ -37,7 +40,7 @@
           <router-link :to="{ name: 'editor', params: { id: currentTemplateId }}">
             <a-button type="primary" size="large"> 使用模版 </a-button>
           </router-link>
-          <a-button size="large"> 下载图片海报 </a-button>
+          <a-button size="large" @click="handleDownLoadImage"> 下载图片海报 </a-button>
         </div>
       </a-col>
     </a-row>
