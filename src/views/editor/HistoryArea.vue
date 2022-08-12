@@ -58,6 +58,7 @@ import {
   GithubOutlined,
 } from '@ant-design/icons-vue'
 import { GlobalDataProps } from '@/types/global'
+
 export default defineComponent({
   components: {
     RedoOutlined,

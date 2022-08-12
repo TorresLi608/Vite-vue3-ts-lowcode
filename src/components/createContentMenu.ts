@@ -17,6 +17,7 @@ const createContentMenu = (
   }
   const vm = createVNode(ContextMenu, props)
   render(vm, container)
+  // 在body插入一个元素，方便全局使用
   document.body.appendChild(container)
   return ()=>{
     // 返回一个方法，在onUnmounted 的时候进行销毁

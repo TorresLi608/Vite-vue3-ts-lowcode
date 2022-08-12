@@ -127,6 +127,7 @@ import { provide, computed, ref, onMounted, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import html2canvas from 'html2canvas'
+import { message } from 'ant-design-vue'
 import initHotKeys from '@/plugins/hotkeys'
 import initContextMenu from '@/plugins/contextMenu'
 import { takeScreenshotAndUpload } from '@/uitils/helper'
@@ -222,7 +223,7 @@ const generateImages = async () => {
 }
 const handleClickSave = () => {
   window.localStorage.setItem('editor-vuex', JSON.stringify(store.state.editor))
-  console.log('保存。。。')
+  message.success('保存成功')
 }
 
 const handleClickPrevew = () => {

@@ -70,6 +70,8 @@ export default defineComponent({
       const allNormalProps = props.groups.reduce((prev, current) => {
         return [...prev, ...current.items]
       }, [] as string[])
+      // difference([3, 2, 1], [4, 2]);
+      // 结果为： [3, 1]
       const specialProps = difference(Object.keys(props.props), allNormalProps)
       return [
         {
