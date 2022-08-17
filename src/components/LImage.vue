@@ -33,6 +33,8 @@ export default defineComponent({
 <style scoped>
 .l-image-component {
   max-width: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
   /* position: relative !important; */
 }
 </style>
